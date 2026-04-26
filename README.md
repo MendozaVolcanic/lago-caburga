@@ -58,9 +58,14 @@ Datos faltantes críticos: caudal histórico Río Blanco (estación recién inst
 - [x] Notebook 4: mapa GIS folium con estaciones, lagos, dique, Ojos, fallas
 - [x] Notebook 5: serie proxy de nivel + correlación P–H
 - [x] Documentación de descarga manual DGA (`docs/DESCARGA_DGA_NIVEL.md`)
+- [x] Pipeline Sentinel-2 NDWI vía STAC (sin auth) → `scripts/sentinel2_caburga.py`
+- [x] CAMELS-CL programmatic (caudales y precip cuenca, 6 cuencas Toltén)
+- [x] Banco de footage CC + storyboard 4 actos (`STORYBOARD.md`)
+- [x] Inventario de fuentes de datos chilenas (`FUENTES_DATOS.md`)
+- [x] Cronología completa del dique (`HISTORIA_TRAFAMPULLI.md`)
 - [ ] Bajar series diarias de nivel del lago (manual desde DGA SNIA)
 - [ ] Calibrar modelo de balance contra serie observada cuando esté disponible
-- [ ] Animaciones (Claude design) sobre implicancias de Δnivel y Δprecipitación
+- [ ] Producción animaciones con Claude design según `STORYBOARD.md`
 
 ## Cómo correr
 

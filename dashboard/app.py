@@ -88,8 +88,9 @@ st.title("💧 Lago Caburga — explorador del balance hídrico")
 st.caption("Datos: CR2 (precipitación y caudales 1965-2019). "
            "Modelo simplificado calibrado contra U. Chile 2022.")
 
-tab1, tab2, tab3, tab4 = st.tabs(
-    ["📈 Balance hídrico", "🌧 Datos observados", "🗺 Mapa", "ℹ️ Lectura"])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
+    ["📈 Balance hídrico", "🌧 Datos observados", "🗺 Mapa",
+     "📜 Historia", "🛰 Sentinel-2", "ℹ️ Lectura"])
 
 P = cargar_precip()
 
@@ -218,8 +219,70 @@ with tab3:
     st.caption("Marcadores rojos = dique Trafampulli, azules = estaciones DGA, "
                "morados = Ojos del Caburga (drenaje subterráneo).")
 
-# ============ Tab 4: Lectura ============
+# ============ Tab 4: Historia ============
 with tab4:
+    st.subheader("Cronología del conflicto")
+    eventos = [
+        ("Holoceno", "Lava volcánica bloquea drenaje superficial; nace el sistema Ojos del Caburga"),
+        ("1940s", "Primer descenso histórico documentado por testimonio"),
+        ("1979-2007", "Aerofotografías SAF muestran el brazo del Trafampulli activo hacia el Caburga"),
+        ("2005", "Vecinos del Lago Colico denuncian a propietario fundo Llanqui-Llanqui"),
+        ("2007 (Of. DGA 347)", "DGA obliga a construir el dique. Sin EIA"),
+        ("2009", "Dique entra en operación. Caudal hacia Caburga = 0"),
+        ("2010", "Inicia la megasequía centro-sur de Chile"),
+        ("Dic 2021", "Informe U. Austral (Iroumé & Ulloa). 'El desvío exacerba el efecto climático'"),
+        ("Ene 2022", "Informe U. Chile (McPhee). 'La megasequía es la causa de primer orden'"),
+        ("16 mayo 2022", "🪓 Comunidad mapuche destruye el dique tras 4 días de trabajo manual"),
+        ("31 ene 2023", "Resolución DGA: ordena reconstruir el dique"),
+        ("Mar 2024", "Informe Contraloría: observaciones administrativas a la DGA"),
+        ("Jun 2023 - Jun 2024", "El Niño. Lago recupera +350 m de costa"),
+        ("13 mar 2025", "Apelaciones Temuco: orden de no innovar"),
+        ("5 ago 2025", "⚖️ Corte Suprema revoca y autoriza reconstrucción del dique"),
+        ("Nov 2025", "DGA confirma cierre del Estero La Cascada"),
+        ("Dic 2025", "DGA mide: solo 4% del estero llega al lago en 11 puntos"),
+        ("Abr 2026", "Estado actual: conflicto abierto, lago descendiendo estacionalmente"),
+    ]
+    for fecha, evento in eventos:
+        c1, c2 = st.columns([1, 4])
+        c1.markdown(f"**{fecha}**")
+        c2.markdown(evento)
+    st.caption("Detalle completo en HISTORIA_TRAFAMPULLI.md del repositorio.")
+
+# ============ Tab 5: Sentinel-2 ============
+with tab5:
+    st.subheader("Superficie del lago — análisis NDWI Sentinel-2")
+    s2_path = DATA / "lago_superficie_s2.csv"
+    if s2_path.exists():
+        s2 = pd.read_csv(s2_path, parse_dates=["fecha"])
+        if not s2.empty:
+            s2 = s2.sort_values("fecha").set_index("fecha")
+            fig, ax = plt.subplots(figsize=(11, 4.5))
+            ax.plot(s2.index, s2["superficie_lago_km2"], "o-", color="#46a", lw=1.5)
+            ax.set(xlabel="Fecha", ylabel="Superficie con NDWI > 0 (km²)",
+                   title="Superficie del lago detectada en imágenes Sentinel-2")
+            ax.grid(alpha=0.3)
+            ax.axvspan(pd.Timestamp("2010-01-01"), pd.Timestamp("2020-12-31"),
+                       alpha=0.08, color="orange", label="Megasequía")
+            ax.legend()
+            st.pyplot(fig)
+            st.dataframe(s2.tail(15), use_container_width=True)
+            st.caption(f"{len(s2)} escenas procesadas. Para añadir más años: "
+                       "`python scripts/sentinel2_caburga.py --since 2020-01-01`")
+        else:
+            st.info("No hay datos aún. Corre `python scripts/sentinel2_caburga.py --year 2020`")
+    else:
+        st.info("Aún no hay datos Sentinel-2. Corre `python scripts/sentinel2_caburga.py --year 2020`")
+
+    st.markdown("### Frames disponibles")
+    sentinel_frames = sorted((ROOT / "notebooks" / "figs" / "sentinel").glob("*.png"))
+    if sentinel_frames:
+        cols = st.columns(min(3, len(sentinel_frames)))
+        for i, f in enumerate(sentinel_frames[:9]):
+            with cols[i % 3]:
+                st.image(str(f), caption=f.stem, use_container_width=True)
+
+# ============ Tab 6: Lectura ============
+with tab6:
     st.markdown("""
 ### Lectura honesta del modelo
 

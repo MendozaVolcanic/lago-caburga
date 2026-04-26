@@ -21,3 +21,6 @@ Thumbs.db
 # Footage: thumbnails YouTube y placeholders
 docs/footage/thumbs/*.jpg
 docs/footage/wikimedia/*placeholder*
+
+# Sentinel-2 raw GeoTIFFs (recreables)
+data/raw/sentinel2/
