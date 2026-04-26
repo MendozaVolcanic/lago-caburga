@@ -192,6 +192,14 @@ with tab2:
                "mientras estaciones más bajas como Pucón o Curarrehue solo "
                "-10% a -15%. La señal climática es real y diferencial por altitud.")
 
+    st.subheader("Validación cruzada: CR2 estaciones vs CAMELS-CL cuenca")
+    fig06 = ROOT / "notebooks" / "figs" / "06_balance_camels.png"
+    if fig06.exists():
+        st.image(str(fig06), use_container_width=True,
+                 caption="Comparación de productos de precipitación (r=0.957). "
+                         "CAMELS-CL cuenca-promedio (CR2MET grillado) vs CR2 estaciones. "
+                         "Ambos confirman caída sostenida post-2010, validando los datos de entrada al balance.")
+
     st.subheader("Caudales medios anuales — ríos vecinos")
     Q = cargar_caudales()
     fig, ax = plt.subplots(figsize=(11, 4.5))
