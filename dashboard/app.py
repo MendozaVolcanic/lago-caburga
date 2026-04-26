@@ -273,6 +273,11 @@ with tab5:
     else:
         st.info("Aún no hay datos Sentinel-2. Corre `python scripts/sentinel2_caburga.py --year 2020`")
 
+    st.markdown("### Timelapse")
+    gif_path = ROOT / "notebooks" / "figs" / "sentinel_timelapse.gif"
+    if gif_path.exists():
+        st.image(str(gif_path), caption="Timelapse NDWI Sentinel-2 (regenerar con `python scripts/make_gif.py`)")
+
     st.markdown("### Frames disponibles")
     sentinel_frames = sorted((ROOT / "notebooks" / "figs" / "sentinel").glob("*.png"))
     if sentinel_frames:
