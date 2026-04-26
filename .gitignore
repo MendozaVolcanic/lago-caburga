@@ -17,3 +17,7 @@ venv/
 .DS_Store
 Thumbs.db
 .claude/
+
+# Footage: thumbnails YouTube y placeholders
+docs/footage/thumbs/*.jpg
+docs/footage/wikimedia/*placeholder*
