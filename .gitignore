@@ -3,9 +3,8 @@ docs/estudios/*.pdf
 docs/dga/*.pdf
 docs/prensa/*.pdf
 
-# Datos crudos descargados
-data/raw/*.csv
-data/raw/*.xlsx
+# Datos crudos descargados (recreables vía scripts/)
+data/raw/
 
 # Python
 __pycache__/

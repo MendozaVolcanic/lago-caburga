@@ -50,12 +50,28 @@ Datos faltantes críticos: caudal histórico Río Blanco (estación recién inst
 
 - [x] Investigación documental y descarga de fuentes
 - [x] Síntesis crítica de los tres estudios principales
-- [ ] **(en curso)** Descarga de series DGA y construcción de dataset consolidado
-- [ ] Notebook 1: precipitación vs nivel del lago (correlación maestra)
-- [ ] Notebook 2: doble acumulada Caburga vs Villarrica/Neltume (detección de quiebre)
-- [ ] Notebook 3: balance hídrico simplificado (replicar U. Chile escenarios 1-4)
-- [ ] Dashboard interactivo con sliders de balance hídrico
+- [x] Descarga de series CR2 (precipitación + caudales diarios 1965-2019)
+- [x] Notebook 1: precipitación, caudales y nivel del lago (figuras base)
+- [x] Notebook 2: doble acumulada y anomalías de precipitación
+- [x] Notebook 3: balance hídrico simplificado con 4 escenarios contrafactuales
+- [x] Dashboard Streamlit interactivo con sliders
+- [ ] Bajar series de nivel del lago desde portal DGA SNIA (interactivo)
+- [ ] Notebook 4: mapa GIS con cuencas y estaciones
 - [ ] Animaciones (Claude design) sobre implicancias de Δnivel y Δprecipitación
+
+## Cómo correr
+
+```bash
+pip install -r requirements.txt
+bash scripts/download_docs.sh        # PDFs de los estudios
+bash scripts/download_cr2.sh         # 30 MB de datos CR2
+python scripts/extract_cr2_stations.py
+python scripts/extract_cr2_caudales.py
+python notebooks/01_correlacion_precipitacion_nivel.py
+python notebooks/02_doble_acumulada.py
+python notebooks/03_balance_hidrico.py
+streamlit run dashboard/app.py
+```
 
 ## Licencia
 
