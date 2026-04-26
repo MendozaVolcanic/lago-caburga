@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<title>Lago Caburga — análisis abierto</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Análisis abierto del descenso del Lago Caburga y la polémica del río Trafampulli. Datos, estudios y balance hídrico.">
+<style>
+:root { --bg:#0e1a24; --fg:#e8eef5; --muted:#7c8fa1; --acc:#4aa3df; --warn:#e6a23c; --bad:#c0392b; --ok:#27ae60; }
+* { box-sizing:border-box; }
+body { margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--fg); line-height:1.55; }
+.hero { padding:80px 24px 60px; text-align:center; background:linear-gradient(180deg,#0e1a24 0%,#13283a 100%); }
+.hero h1 { margin:0 0 12px; font-size:clamp(2rem, 5vw, 3.5rem); font-weight:700; letter-spacing:-0.02em; }
+.hero p { max-width:720px; margin:0 auto; color:var(--muted); font-size:1.15rem; }
+.container { max-width:1100px; margin:0 auto; padding:48px 24px; }
+section { margin-bottom:72px; }
+h2 { font-size:1.6rem; border-left:4px solid var(--acc); padding-left:12px; margin-bottom:24px; }
+.grid { display:grid; gap:20px; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
+.card { background:#142434; border-radius:8px; padding:22px; border:1px solid #1f3245; }
+.card h3 { margin:0 0 10px; font-size:1.1rem; }
+.card p { color:var(--muted); margin:0 0 12px; font-size:0.95rem; }
+.card a { color:var(--acc); text-decoration:none; font-weight:500; }
+.card a:hover { text-decoration:underline; }
+.timeline { border-left:2px solid #2a3f56; padding-left:24px; }
+.timeline li { list-style:none; position:relative; margin-bottom:18px; padding-bottom:6px; }
+.timeline li::before { content:''; position:absolute; left:-31px; top:7px; width:12px; height:12px; background:var(--acc); border-radius:50%; }
+.timeline li.bad::before { background:var(--bad); }
+.timeline li.warn::before { background:var(--warn); }
+.timeline li.ok::before { background:var(--ok); }
+.date { color:var(--acc); font-weight:600; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; }
+.event { color:var(--fg); font-size:0.97rem; }
+.metrics { display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); }
+.metric { background:#142434; border-radius:8px; padding:18px; text-align:center; border:1px solid #1f3245; }
+.metric .num { font-size:2.4rem; font-weight:700; color:var(--acc); display:block; }
+.metric .lbl { color:var(--muted); font-size:0.85rem; margin-top:6px; }
+.gallery { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
+.gallery figure { margin:0; }
+.gallery img { width:100%; height:200px; object-fit:cover; border-radius:6px; display:block; }
+.gallery figcaption { color:var(--muted); font-size:0.82rem; padding:6px 2px 0; }
+footer { padding:40px 24px; text-align:center; color:var(--muted); border-top:1px solid #1f3245; }
+.disclaimer { background:#1a2a3c; border-left:3px solid var(--warn); padding:16px 20px; border-radius:4px; color:#cdd6df; font-size:0.94rem; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Lago Caburga</h1>
+  <p>Análisis abierto del descenso del nivel del lago y la polémica del río Trafampulli.<br>Datos, estudios y balance hídrico — sin trincheras.</p>
+</div>
+
+<div class="container">
+
+<section>
+  <h2>El problema en 4 cifras</h2>
+  <div class="metrics">
+    <div class="metric"><span class="num">-25%</span><div class="lbl">caída del nivel<br>2000-2010 vs 2011-2020</div></div>
+    <div class="metric"><span class="num">-34%</span><div class="lbl">caída precipitación<br>estación Lago Caburga post-2010</div></div>
+    <div class="metric"><span class="num">56→27%</span><div class="lbl">cobertura nieve cuenca<br>2001-2011 vs 2012-2021</div></div>
+    <div class="metric"><span class="num">~80/20</span><div class="lbl">atribución<br>megasequía / dique</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Cronología</h2>
+  <ul class="timeline">
+    <li><div class="date">Holoceno</div><div class="event">Lava volcánica bloquea drenaje superficial. Nace el sistema único Ojos del Caburga.</div></li>
+    <li><div class="date">1979-2007</div><div class="event">Aerofotografías SAF muestran el brazo del Trafampulli activo hacia el Caburga.</div></li>
+    <li class="warn"><div class="date">2005</div><div class="event">Vecinos del Lago Colico denuncian a propietario del Fundo Llanqui-Llanqui por modificar el cauce.</div></li>
+    <li class="warn"><div class="date">2007 — Of. DGA 347</div><div class="event">DGA obliga a construir el dique. Sin Estudio de Impacto Ambiental.</div></li>
+    <li class="bad"><div class="date">2009</div><div class="event">Dique entra en operación. Caudal hacia Caburga = 0.</div></li>
+    <li class="bad"><div class="date">2010</div><div class="event">Inicia la megasequía centro-sur de Chile. Déficit pluviométrico ~30%.</div></li>
+    <li><div class="date">Diciembre 2021</div><div class="event">Informe U. Austral (Iroumé &amp; Ulloa): el desvío <em>exacerba</em> el efecto climático.</div></li>
+    <li><div class="date">Enero 2022</div><div class="event">Informe U. de Chile (McPhee et al.): la megasequía es la causa de primer orden.</div></li>
+    <li class="ok"><div class="date">16 mayo 2022</div><div class="event"><strong>Comunidad mapuche destruye el dique</strong> tras 4 días de trabajo manual y 16 años de peticiones a la DGA.</div></li>
+    <li class="warn"><div class="date">31 enero 2023</div><div class="event">Resolución DGA: ordena reconstruir el dique.</div></li>
+    <li class="ok"><div class="date">Junio 2023 — junio 2024</div><div class="event">El Niño. Lago recupera +350 metros lineales de costa.</div></li>
+    <li class="bad"><div class="date">5 agosto 2025</div><div class="event">Corte Suprema revoca fallo de Apelaciones y autoriza a la DGA reconstruir el dique.</div></li>
+    <li class="bad"><div class="date">Diciembre 2025</div><div class="event">DGA mide: solo 4% del Estero La Cascada llega al lago. Anuncia cierre. Gobernador Saffirio se opone.</div></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Recursos del proyecto</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>📊 Dashboard interactivo</h3>
+      <p>Explora el balance hídrico del lago con sliders para precipitación, aporte del Trafampulli y drenaje subterráneo.</p>
+      <a href="https://github.com/MendozaVolcanic/lago-caburga#cómo-correr">Cómo ejecutarlo →</a>
+    </div>
+    <div class="card">
+      <h3>📜 Historia detallada</h3>
+      <p>Cronología completa con personajes, fallos judiciales, estudios técnicos y el conflicto semántico Trafampulli vs La Cascada.</p>
+      <a href="https://github.com/MendozaVolcanic/lago-caburga/blob/main/HISTORIA_TRAFAMPULLI.md">Leer →</a>
+    </div>
+    <div class="card">
+      <h3>🌐 Fuentes de datos</h3>
+      <p>Inventario del ecosistema chileno: CR2, DGA SNIA, DMC, CAMELS-CL, Vigilantes Lagos. URLs directas y dificultades de acceso.</p>
+      <a href="https://github.com/MendozaVolcanic/lago-caburga/blob/main/FUENTES_DATOS.md">Ver →</a>
+    </div>
+    <div class="card">
+      <h3>🛰 Pipeline Sentinel-2</h3>
+      <p>Script reproducible que descarga imágenes Sentinel-2, calcula NDWI y mide la superficie del lago en el tiempo.</p>
+      <a href="https://github.com/MendozaVolcanic/lago-caburga/blob/main/scripts/sentinel2_caburga.py">Código →</a>
+    </div>
+    <div class="card">
+      <h3>🎬 Storyboard animación</h3>
+      <p>Guion de 4 actos × 5 minutos para producción didáctica con Claude Design o Remotion. Audiencia general.</p>
+      <a href="https://github.com/MendozaVolcanic/lago-caburga/blob/main/STORYBOARD.md">Leer guion →</a>
+    </div>
+    <div class="card">
+      <h3>📷 Banco de footage</h3>
+      <p>32 imágenes Wikimedia (CC), 11 videos YouTube relevantes, 5 fuentes prensa, satelital. Todo licenciado.</p>
+      <a href="https://github.com/MendozaVolcanic/lago-caburga/blob/main/FOOTAGE.md">Catálogo →</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Galería</h2>
+  <div class="gallery">
+    <figure>
+      <img src="footage/wikimedia/caburgua_playa_2019_01.jpg" alt="Lago Caburga playa 2019">
+      <figcaption>2019 · estado normal · CC BY-SA 4.0</figcaption>
+    </figure>
+    <figure>
+      <img src="footage/wikimedia/lago_caburgua_2022.jpg" alt="Lago Caburga 2022 sequía">
+      <figcaption>2022 · sequía · CC BY-SA 4.0</figcaption>
+    </figure>
+    <figure>
+      <img src="footage/prensa/terram_2024_recuperacion.jpg" alt="Lago Caburga 2024 recuperado">
+      <figcaption>oct 2024 · recuperación · © Terram</figcaption>
+    </figure>
+    <figure>
+      <img src="footage/wikimedia/ojos_2019_01.jpg" alt="Ojos del Caburga">
+      <figcaption>Ojos del Caburga · drenaje subterráneo</figcaption>
+    </figure>
+    <figure>
+      <img src="footage/wikimedia/atardecer_caburgua.jpg" alt="Atardecer en Caburga">
+      <figcaption>atardecer · CC BY-SA 3.0</figcaption>
+    </figure>
+    <figure>
+      <img src="footage/wikimedia/vista_desde_villarrica.jpg" alt="Vista desde Villarrica">
+      <figcaption>vista desde el volcán Villarrica</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <h2>Lectura honesta</h2>
+  <div class="disclaimer">
+    Este proyecto <strong>no toma partido</strong> entre los relatos "es el clima" y "es el dique".
+    Los datos disponibles muestran que la megasequía 2010-presente es el factor de primer orden,
+    pero el cierre del Trafampulli amplifica el problema en años secos. Ambas universidades llegaron
+    a esa misma conclusión cualitativa, pero difieren en la magnitud (1-2 m³/s vs 0,3 m³/s del aporte
+    histórico). Los datos para resolver definitivamente esa pregunta —caudal medido del Trafampulli al
+    Caburga, batimetría reciente, limnimetría del Lago Colico— <strong>nunca se han recolectado</strong>.
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <p>Datos bajo CC BY 4.0 · Código bajo MIT ·
+  <a href="https://github.com/MendozaVolcanic/lago-caburga" style="color:var(--acc)">github.com/MendozaVolcanic/lago-caburga</a></p>
+</footer>
+
+</body>
+</html>
