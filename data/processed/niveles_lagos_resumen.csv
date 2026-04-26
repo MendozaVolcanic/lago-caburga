@@ -1,0 +1,6 @@
+lago,codigo_dga,periodo,h_promedio_m,h_max_m,h_min_m,tendencia_m_por_año,fuente
+Caburga,09417001-K,2000-2010,9.6,12.2,6.9,,U. Austral 2021 Fig 11
+Caburga,09417001-K,2011-2020,7.1,9.2,5.0,,U. Austral 2021 Fig 11
+Caburga,09417001-K,2000-2021,,,,-0.234,U. Austral 2021 (regresión)
+Villarrica,09420009-1,2000-2021,,,,-0.036,U. Austral 2021 (regresión)
+Neltume,LM-Neltume,2000-2021,,,,-0.042,U. Austral 2021 (regresión)

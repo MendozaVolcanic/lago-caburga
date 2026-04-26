@@ -54,9 +54,12 @@ Datos faltantes críticos: caudal histórico Río Blanco (estación recién inst
 - [x] Notebook 1: precipitación, caudales y nivel del lago (figuras base)
 - [x] Notebook 2: doble acumulada y anomalías de precipitación
 - [x] Notebook 3: balance hídrico simplificado con 4 escenarios contrafactuales
-- [x] Dashboard Streamlit interactivo con sliders
-- [ ] Bajar series de nivel del lago desde portal DGA SNIA (interactivo)
-- [ ] Notebook 4: mapa GIS con cuencas y estaciones
+- [x] Dashboard Streamlit con tabs (balance / datos / mapa / lectura)
+- [x] Notebook 4: mapa GIS folium con estaciones, lagos, dique, Ojos, fallas
+- [x] Notebook 5: serie proxy de nivel + correlación P–H
+- [x] Documentación de descarga manual DGA (`docs/DESCARGA_DGA_NIVEL.md`)
+- [ ] Bajar series diarias de nivel del lago (manual desde DGA SNIA)
+- [ ] Calibrar modelo de balance contra serie observada cuando esté disponible
 - [ ] Animaciones (Claude design) sobre implicancias de Δnivel y Δprecipitación
 
 ## Cómo correr

@@ -1,0 +1,15 @@
+codigo_estacion,institucion,nombre,altura,latitud,longitud,tipo
+8301001,DGA,Liucura,1043,-38.6517,-71.0919,precipitacion
+9401001,DGA,Tricauco,520,-38.8506,-71.55,precipitacion
+9405001,DGA,Rio Curaco En Colico,250,-39.0333,-72.0833,precipitacion
+9416002,DGA,Lago Tinquilco,850,-39.1667,-71.7231,precipitacion
+9417001,DGA,Lago Caburgua,480,-39.2,-71.8089,precipitacion
+9417002,DGA,Ojos Del Caburgua,300,-39.2367,-71.8356,precipitacion
+9420002,DGA,Pucon,230,-39.2753,-71.9503,precipitacion
+9414002,DGA,Llafenco,360,-39.3314,-71.8083,precipitacion
+9412002,DGA,Curarrehue,420,-39.3581,-71.5744,precipitacion
+9412003,DGA,Puesco (Aduana),620,-39.5192,-71.5478,precipitacion
+9416001,DGA,Rio Liucura En Liucura,402,-39.2561,-71.8244,fluviometrica
+9420001,DGA,Rio Tolten En Villarica,250,-39.2667,-72.2333,fluviometrica
+9414001,DGA,Rio Trancura Antes Rio Llafenco,386,-39.3333,-71.7667,fluviometrica
+9412001,DGA,Rio Trancura En Curarrehue,400,-39.36,-71.5808,fluviometrica
