@@ -1,0 +1,10 @@
+estacion,codigo,periodo,pma_mm,fuente
+Lago Caburgua,09417001,1976-2006,2950.0,U. Chile 2022 Tabla 3.1
+Lago Caburgua,09417001,2007-2021,2076.36,U. Chile 2022 Tabla 3.1
+Lago Tinquilco,09416002,1996-2006,3156.64,U. Chile 2022 Tabla 3.1
+Lago Tinquilco,09416002,2007-2020,2476.1,U. Chile 2022 Tabla 3.1
+Tricauco,09401001,1988-2006,2128.3,U. Chile 2022 Tabla 3.1
+Tricauco,09401001,2007-2020,1963.54,U. Chile 2022 Tabla 3.1
+Cuenca Caburgua (ponderada),NA,pre-2006,3078.1,U. Chile 2022 (Thiessen)
+Cuenca Caburgua (ponderada),NA,2006-2021,1963.54,U. Chile 2022 (Thiessen)
+Cuenca Caburgua (histórico),NA,Balance hidrico DGA 1987,3368.0,DGA 1987

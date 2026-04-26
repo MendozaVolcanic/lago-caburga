@@ -1,0 +1,5 @@
+escenario,descripcion,Pl_lluvia_lago_Hm3,Qi_afluentes_Hm3,QDTf_trafampulli_Hm3,Qoe_extraccion_Hm3,Qo_subterraneo_Hm3,E_evap_Hm3
+Base,observado 2000-2021,122.79,460.35,3.87,22.28,526.55,43.24
+2_Precipitaciones,+8% lluvia post 2010,131.68,488.01,3.87,22.25,543.49,43.24
+3_Extracciones,5x derechos permanentes,122.79,460.35,3.87,37.14,517.63,43.24
+4_Trafampulli,1 m3/s constante,122.79,460.35,23.65,22.28,526.55,43.24

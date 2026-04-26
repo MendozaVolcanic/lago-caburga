@@ -1,0 +1,20 @@
+# PDFs grandes — usar scripts/download_docs.sh para recrearlos
+docs/estudios/*.pdf
+docs/dga/*.pdf
+docs/prensa/*.pdf
+
+# Datos crudos descargados
+data/raw/*.csv
+data/raw/*.xlsx
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Sistema
+.DS_Store
+Thumbs.db
+.claude/
