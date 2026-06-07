@@ -115,6 +115,20 @@ footer a{color:var(--acc);text-decoration:none;}
 .disclaimer{background:#1a2a3c;border-left:3px solid var(--warn);padding:16px 20px;border-radius:4px;
   color:#cdd6df;font-size:.93rem;max-width:740px;}
 
+/* Comparador de imágenes con slider */
+.compare{position:relative;width:100%;max-width:900px;margin:34px auto;border-radius:12px;
+  overflow:hidden;box-shadow:0 12px 44px rgba(0,0,0,.5);user-select:none;aspect-ratio:4/3;}
+.compare img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;}
+.compare .after{clip-path:inset(0 0 0 50%);}
+.compare .handle{position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--acc);
+  transform:translateX(-50%);cursor:ew-resize;z-index:5;}
+.compare .handle::after{content:'⟺';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:42px;height:42px;background:var(--acc);color:#fff;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 10px rgba(0,0,0,.4);}
+.compare .lbl{position:absolute;top:14px;padding:5px 12px;background:rgba(14,26,36,.82);
+  color:var(--fg);font-size:.85rem;font-weight:600;border-radius:6px;z-index:4;}
+.compare .lbl.l{left:14px;} .compare .lbl.r{right:14px;}
+
 @media(max-width:600px){section.block{padding:60px 18px;}.verdict{padding:24px;}}
 </style>
 </head>
@@ -167,6 +181,18 @@ footer a{color:var(--acc);text-decoration:none;}
     <div class="metric-box"><span class="n">335 km²</span><div class="l">cuenca aportante</div></div>
     <div class="metric-box"><span class="n">~20 m³/s</span><div class="l">salida por los Ojos<br>(estimado)</div></div>
   </div>
+  <h3 class="reveal">Arrastra para ver el cambio</h3>
+  <div class="compare reveal" id="cmp">
+    <img class="before" src="footage/wikimedia/caburgua_playa_2019_01.jpg" alt="Lago lleno 2019">
+    <img class="after" src="footage/wikimedia/lago_caburgua_2022.jpg" alt="Lago seco 2022">
+    <span class="lbl l">2019 · lleno</span>
+    <span class="lbl r">2022 · sequía</span>
+    <div class="handle" id="cmpHandle"></div>
+  </div>
+  <p class="reveal" style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:-18px;">
+    Imágenes Wikimedia Commons CC BY-SA. Arrastra el control central.
+  </p>
+
   <figure class="reveal">
     <img src="assets/antes_despues_lago.jpg" alt="El lago en 2019, 2022 y 2024">
     <figcaption>Tres momentos: 2019 normal · 2022 sequía profunda · 2024 recuperación tras El Niño</figcaption>
@@ -286,6 +312,19 @@ footer a{color:var(--acc);text-decoration:none;}
     <figcaption>Resultado del balance hídrico simplificado, calibrado contra el modelo de U. Chile 2022.</figcaption>
   </figure>
 
+  <h3 class="reveal">El modelo reproduce la historia reciente</h3>
+  <p class="reveal">
+    Cuando alimentamos el balance hídrico con la serie completa de precipitación
+    (1990-2025), el modelo reproduce lo que la gente vio: el descenso sostenido hasta
+    2021, la recuperación de +3,8 m con El Niño 2022-2024, y el nuevo descenso de
+    −2,8 m en 2025 con La Niña. Esa sensibilidad a la lluvia es justamente la prueba
+    de que el clima manda.
+  </p>
+  <figure class="reveal">
+    <img src="assets/balance_2025.png" alt="Balance hídrico 1990-2025">
+    <figcaption>Cota simulada vs contrafactuales. La línea azul sigue las lluvias reales: baja en sequía, sube en El Niño, vuelve a bajar en 2025.</figcaption>
+  </figure>
+
   <div class="verdict reveal">
     <h3>Nuestra postura</h3>
     <p class="big">La causa de primer orden es la megasequía. El dique es un
@@ -388,6 +427,21 @@ footer a{color:var(--acc);text-decoration:none;}
 </div>
 </section>
 
+<section class="block" style="text-align:center;">
+<div class="inner">
+  <span class="num reveal">Resumen en video</span>
+  <h2 class="reveal">52 segundos para entenderlo todo</h2>
+  <video class="reveal" controls preload="metadata" poster="footage/wikimedia/atardecer_caburgua.jpg"
+    style="width:100%;max-width:860px;border-radius:12px;box-shadow:0 12px 44px rgba(0,0,0,.5);margin-top:20px;">
+    <source src="assets/video_horizontal.mp4" type="video/mp4">
+    Tu navegador no soporta video HTML5.
+  </video>
+  <p class="reveal" style="color:var(--muted);font-size:.85rem;margin:14px auto 0;">
+    También disponible en <a href="assets/video_vertical.mp4" style="color:var(--acc);">formato vertical</a> para redes sociales.
+  </p>
+</div>
+</section>
+
 <section class="cta-section">
   <h2 style="margin-bottom:14px;">Explora la evidencia tú mismo</h2>
   <p style="color:var(--muted);">Todo este estudio es código y datos abiertos. Verifícalo, corrígelo, mejóralo.</p>
@@ -412,6 +466,27 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 // Progress bar
 const prog=document.getElementById('progress');
 addEventListener('scroll',()=>{const h=document.documentElement;const p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;prog.style.width=p+'%';});
+
+// Comparador de imágenes con slider
+(function(){
+  const c=document.getElementById('cmp');if(!c)return;
+  const after=c.querySelector('.after'),handle=document.getElementById('cmpHandle');
+  let drag=false;
+  function setPos(x){
+    const r=c.getBoundingClientRect();
+    let p=(x-r.left)/r.width;p=Math.max(0,Math.min(1,p));
+    after.style.clipPath='inset(0 0 0 '+(p*100)+'%)';
+    handle.style.left=(p*100)+'%';
+  }
+  const start=()=>drag=true, end=()=>drag=false;
+  handle.addEventListener('mousedown',start);
+  addEventListener('mouseup',end);
+  addEventListener('mousemove',e=>{if(drag)setPos(e.clientX);});
+  handle.addEventListener('touchstart',start,{passive:true});
+  addEventListener('touchend',end);
+  addEventListener('touchmove',e=>{if(drag)setPos(e.touches[0].clientX);},{passive:true});
+  c.addEventListener('click',e=>setPos(e.clientX));
+})();
 
 // Nav dots active state
 const dots=document.querySelectorAll('#nav a');
