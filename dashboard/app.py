@@ -37,6 +37,23 @@ def cargar_precip() -> pd.Series:
 
 
 @st.cache_data
+def cargar_precip_openmeteo() -> pd.Series:
+    """Serie Open-Meteo ERA5 1950-2025 (cubre hasta el presente)."""
+    f = DATA / "openmeteo_precip_anual.csv"
+    if not f.exists():
+        return pd.Series(dtype=float)
+    return pd.read_csv(f, index_col="año")["Lago Caburga"].dropna()
+
+
+# Fases ENSO (El Niño cálido / La Niña frío) — años hidrológicos australes
+ENSO = {
+    "niño": [1957, 1965, 1972, 1982, 1987, 1991, 1997, 2002, 2009, 2015, 2018, 2023],
+    "niña": [1954, 1964, 1970, 1973, 1975, 1988, 1998, 1999, 2007, 2010, 2011,
+             2020, 2021, 2022, 2025],
+}
+
+
+@st.cache_data
 def cargar_anomalias() -> pd.DataFrame:
     df = pd.read_csv(DATA / "precipitacion_diaria_cuenca.csv",
                      parse_dates=["fecha"], index_col="fecha")
@@ -92,9 +109,14 @@ tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
     ["📈 Balance hídrico", "🌧 Datos observados", "🗺 Mapa",
      "📜 Historia", "🛰 Sentinel-2", "ℹ️ Lectura"])
 
-P = cargar_precip()
-
 with st.sidebar:
+    st.header("Fuente de datos")
+    fuente = st.radio(
+        "Serie de precipitación",
+        ["Open-Meteo ERA5 (1950-2025)", "CR2 estaciones (1965-2019)"],
+        help="Open-Meteo llega hasta 2025 (incluye El Niño 2024 y La Niña 2025). "
+             "CR2 es medición directa de estación, más fuerte la señal de sequía.")
+    st.markdown("---")
     st.header("Parámetros del modelo")
     fac_p = st.slider("Factor de precipitación", 0.7, 1.4, 1.0, 0.05,
                       help="1.0 = lluvia observada. 1.2 simula 'sin megasequía'.")
@@ -112,37 +134,68 @@ with st.sidebar:
                "• Sin dique (U.Ch): Trafampulli=0.3\n"
                "• Sin dique (U.Aus): Trafampulli=1.5")
 
+if fuente.startswith("Open-Meteo"):
+    P_full = cargar_precip_openmeteo()
+    P = P_full.loc[1990:] if not P_full.empty else cargar_precip()
+else:
+    P = cargar_precip()
+
 base = simular(P, 0.0, 1.0, 0.65, 70.0, 0.05)
 escenario = simular(P, q_traf, fac_p, c_esc, alpha, q_ext)
+
+
+def marca_enso(ax):
+    """Sombrea El Niño (azul) y La Niña (rojo) detrás de la serie."""
+    for año in ENSO["niño"]:
+        if P.index.min() <= año <= P.index.max():
+            ax.axvspan(año - 0.5, año + 0.5, color="#4aa3df", alpha=0.10, zorder=0)
+    for año in ENSO["niña"]:
+        if P.index.min() <= año <= P.index.max():
+            ax.axvspan(año - 0.5, año + 0.5, color="#c0392b", alpha=0.10, zorder=0)
+
 
 # ============ Tab 1: Balance ============
 with tab1:
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Cota base 2018 (m s.n.m.)", f"{base['H_m'].iloc[-1]:.2f}")
+    col1.metric(f"Cota base {base.index[-1]} (m s.n.m.)", f"{base['H_m'].iloc[-1]:.2f}")
     col2.metric("Cota escenario (m s.n.m.)", f"{escenario['H_m'].iloc[-1]:.2f}",
                 f"{escenario['H_m'].iloc[-1] - base['H_m'].iloc[-1]:+.2f} m")
     col3.metric("Δ período (m)",
                 f"{escenario['H_m'].iloc[-1] - escenario['H_m'].iloc[0]:+.2f}")
     col4.metric("Precip prom (mm/año)", f"{(P * fac_p).mean():.0f}")
 
+    st.caption("🟦 bandas azules = El Niño · 🟥 bandas rojas = La Niña")
+
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 7), sharex=True,
                                     gridspec_kw={"height_ratios": [2, 1]})
+    marca_enso(ax1)
+    marca_enso(ax2)
     ax1.plot(base.index, base["H_m"], "o-", color="#888", lw=1.4, ms=3,
              label="Base (observado)")
     ax1.plot(escenario.index, escenario["H_m"], "o-", color="#c44", lw=2, ms=4,
              label=f"Escenario (P×{fac_p:.2f}, Traf={q_traf:.1f} m³/s)")
-    ax1.axvline(2010, color="orange", ls="--", alpha=0.5, label="Megasequía")
-    ax1.axvline(2007, color="purple", ls=":", alpha=0.5, label="Dique Trafampulli")
+    ax1.axvline(2010, color="orange", ls="--", alpha=0.6, label="Megasequía")
+    ax1.axvline(2007, color="purple", ls=":", alpha=0.6, label="Dique 2007")
+    if P.index.max() >= 2022:
+        ax1.axvline(2022, color="#27ae60", ls=":", alpha=0.6, label="Cae dique 2022")
     ax1.set(ylabel="Cota lago (m s.n.m.)", title="Cota simulada del Lago Caburga")
     ax1.legend(loc="lower left", fontsize=9)
     ax1.grid(alpha=0.3)
-    ax2.bar(P.index, P, color="#48a", alpha=0.55, label="P observada")
-    ax2.bar(P.index, P * fac_p - P, bottom=P, color="#c44", alpha=0.6,
-            label=f"Δ por factor {fac_p:.2f}")
-    ax2.set(xlabel="Año", ylabel="Precipitación cuenca (mm)")
+    ax2.bar(P.index, P, color="#48a", alpha=0.6, label="P observada")
+    if fac_p != 1.0:
+        ax2.bar(P.index, P * fac_p - P, bottom=P, color="#c44", alpha=0.6,
+                label=f"Δ por factor {fac_p:.2f}")
+    ax2.set(xlabel="Año", ylabel="Precipitación (mm)")
     ax2.legend(fontsize=9)
     ax2.grid(axis="y", alpha=0.3)
     st.pyplot(fig)
+
+    if fuente.startswith("Open-Meteo") and base.index.max() >= 2025:
+        st.info(f"📍 El modelo reproduce la **recuperación** de El Niño "
+                f"(2021→2024: {base['H_m'].get(2024, float('nan')) - base['H_m'].get(2021, float('nan')):+.1f} m) "
+                f"y el **nuevo descenso** de La Niña "
+                f"(2024→2025: {base['H_m'].get(2025, float('nan')) - base['H_m'].get(2024, float('nan')):+.1f} m). "
+                "Esta sensibilidad a la lluvia es la mejor evidencia de que el clima manda.")
 
     st.markdown("### Atribución del descenso")
     contra_clima = simular(P, q_traf, 1.20, c_esc, alpha, q_ext)
