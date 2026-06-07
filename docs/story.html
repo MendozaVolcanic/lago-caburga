@@ -2,533 +2,422 @@
 <html lang="es-CL">
 <head>
 <meta charset="utf-8">
-<title>Lago Caburga · La historia en 4 actos</title>
+<title>Lago Caburga · Un estudio para destrabar el conflicto</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="La historia del descenso del Lago Caburga, la polémica del dique Trafampulli y la disputa entre megasequía y desvío del río.">
-
-<!-- OG -->
-<meta property="og:title" content="Lago Caburga · La historia en 4 actos">
-<meta property="og:description" content="Datos, estudios y un conflicto. Una mirada honesta al descenso del Lago Caburga.">
+<meta name="description" content="Estudio abierto del descenso del Lago Caburga: qué dice la evidencia científica y cómo se podría resolver el conflicto del río Trafampulli.">
+<meta property="og:title" content="Lago Caburga · Un estudio para destrabar el conflicto">
+<meta property="og:description" content="La evidencia, una postura honesta, y un camino de solución inspirado en casos que sí funcionaron.">
 <meta property="og:image" content="https://mendozavolcanic.github.io/lago-caburga/assets/antes_despues_lago.jpg">
 
 <style>
-:root {
-  --bg:#0e1a24; --bg2:#13283a; --fg:#e8eef5; --muted:#7c8fa1;
-  --acc:#4aa3df; --warn:#e6a23c; --bad:#c0392b; --ok:#27ae60;
+:root{
+  --bg:#0e1a24; --bg2:#13283a; --panel:#142434; --fg:#e8eef5; --muted:#7c8fa1;
+  --acc:#4aa3df; --warn:#e6a23c; --bad:#c0392b; --ok:#27ae60; --line:#1f3245;
 }
-* { box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-body {
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
-  background:var(--bg); color:var(--fg); line-height:1.6;
-  font-size:17px;
-}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+  background:var(--bg);color:var(--fg);line-height:1.65;font-size:17px;}
+
+/* Progress bar */
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--acc);width:0;z-index:100;transition:width .1s;}
+
+/* Nav dots */
+#nav{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:90;display:flex;flex-direction:column;gap:12px;}
+#nav a{width:11px;height:11px;border-radius:50%;background:#2a3f56;border:2px solid transparent;transition:all .2s;display:block;}
+#nav a:hover,#nav a.active{background:var(--acc);transform:scale(1.3);}
+@media(max-width:780px){#nav{display:none;}}
 
 /* Hero */
-.hero {
-  height:100vh; min-height:600px;
-  display:flex; flex-direction:column; justify-content:center; align-items:center;
-  text-align:center; padding:0 24px;
-  background:
-    linear-gradient(180deg, rgba(14,26,36,0.6), rgba(14,26,36,0.95)),
-    url('footage/wikimedia/atardecer_caburgua.jpg') center/cover;
-}
-.hero h1 {
-  font-size:clamp(2.5rem, 7vw, 5rem);
-  margin:0 0 18px;
-  letter-spacing:-0.02em;
-  font-weight:800;
-  text-shadow:0 4px 30px rgba(0,0,0,0.6);
-}
-.hero p {
-  font-size:clamp(1.05rem, 2vw, 1.4rem);
-  max-width:720px; color:#cdd6df;
-  margin:0 0 30px;
-}
-.hero .cta {
-  display:inline-block; padding:12px 28px;
-  background:var(--acc); color:white; font-weight:600;
-  border-radius:32px; text-decoration:none;
-  transition:transform 0.2s, box-shadow 0.2s;
-}
-.hero .cta:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(74,163,223,0.4); }
-.hero .scroll-hint {
-  position:absolute; bottom:30px; color:var(--muted);
-  font-size:0.85rem; animation:bounce 2s infinite;
-}
-@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+.hero{height:100vh;min-height:620px;display:flex;flex-direction:column;justify-content:center;
+  align-items:center;text-align:center;padding:0 24px;position:relative;
+  background:linear-gradient(180deg,rgba(14,26,36,.55),rgba(14,26,36,.96)),
+    url('footage/wikimedia/atardecer_caburgua.jpg') center/cover;}
+.hero .kicker{color:var(--acc);font-size:.82rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;margin-bottom:20px;}
+.hero h1{font-size:clamp(2.4rem,6.5vw,4.8rem);margin:0 0 20px;letter-spacing:-.02em;font-weight:800;text-shadow:0 4px 30px rgba(0,0,0,.6);max-width:14ch;}
+.hero p{font-size:clamp(1.05rem,2vw,1.35rem);max-width:680px;color:#cdd6df;margin:0 0 32px;}
+.hero .cta{display:inline-block;padding:13px 30px;background:var(--acc);color:#fff;font-weight:600;border-radius:32px;text-decoration:none;transition:transform .2s,box-shadow .2s;}
+.hero .cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(74,163,223,.4);}
+.scroll-hint{position:absolute;bottom:28px;color:var(--muted);font-size:.82rem;animation:bounce 2s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
 
-/* Actos */
-.acto {
-  padding:90px 24px 80px;
-  border-top:1px solid #1f3245;
-}
-.acto-inner { max-width:1000px; margin:0 auto; }
-.acto-num {
-  display:inline-block; padding:5px 14px;
-  background:rgba(74,163,223,0.12); border:1px solid var(--acc);
-  border-radius:20px; color:var(--acc);
-  font-size:0.78rem; font-weight:700; letter-spacing:0.1em;
-  text-transform:uppercase; margin-bottom:18px;
-}
-.acto h2 {
-  font-size:clamp(1.8rem, 4vw, 2.8rem);
-  margin:0 0 22px; font-weight:700;
-  letter-spacing:-0.01em;
-}
-.acto h3 {
-  margin-top:54px; margin-bottom:12px;
-  font-size:1.3rem; color:var(--fg);
-}
-.acto p { color:#c9d4dd; max-width:720px; }
-.acto .lede {
-  font-size:1.15rem; color:#d6dde4; max-width:720px;
-  border-left:3px solid var(--acc); padding-left:18px;
-  margin-bottom:36px;
-}
-.acto figure {
-  margin:32px 0; padding:0;
-  border-radius:10px; overflow:hidden;
-  box-shadow:0 10px 40px rgba(0,0,0,0.5);
-}
-.acto figure img { width:100%; display:block; }
-.acto figure figcaption {
-  background:#142434; color:var(--muted);
-  padding:12px 18px; font-size:0.88rem; border-top:1px solid #1f3245;
-}
+/* Secciones */
+section.block{padding:96px 24px 84px;border-top:1px solid var(--line);}
+.inner{max-width:1000px;margin:0 auto;}
+.num{display:inline-block;padding:5px 14px;background:rgba(74,163,223,.12);border:1px solid var(--acc);
+  border-radius:20px;color:var(--acc);font-size:.76rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:20px;}
+h2{font-size:clamp(1.8rem,4vw,2.7rem);margin:0 0 24px;font-weight:700;letter-spacing:-.01em;}
+h3{margin-top:52px;margin-bottom:14px;font-size:1.3rem;}
+p{color:#c9d4dd;max-width:740px;}
+.lede{font-size:1.15rem;color:#d8dfe6;max-width:740px;border-left:3px solid var(--acc);padding-left:20px;margin-bottom:38px;}
 
-/* Dataviz */
-.metric-row {
-  display:grid; gap:18px;
-  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-  margin:36px 0;
-}
-.metric-box {
-  background:#142434; border:1px solid #1f3245;
-  border-radius:8px; padding:20px; text-align:center;
-}
-.metric-box .num {
-  font-size:2.4rem; font-weight:800; color:var(--acc);
-  display:block; line-height:1;
-}
-.metric-box .lbl {
-  color:var(--muted); font-size:0.82rem;
-  margin-top:8px; line-height:1.35;
-}
+figure{margin:34px 0;padding:0;border-radius:12px;overflow:hidden;box-shadow:0 12px 44px rgba(0,0,0,.5);}
+figure img{width:100%;display:block;}
+figcaption{background:var(--panel);color:var(--muted);padding:13px 18px;font-size:.87rem;border-top:1px solid var(--line);}
 
-/* Quote */
-.quote {
-  margin:36px 0; padding:24px 28px;
-  background:linear-gradient(90deg, rgba(74,163,223,0.08), transparent);
-  border-left:4px solid var(--acc);
-  font-style:italic; font-size:1.1rem;
-}
-.quote .src {
-  display:block; font-style:normal;
-  color:var(--muted); font-size:0.85rem; margin-top:8px;
-}
+.metric-row{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin:36px 0;}
+.metric-box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px;text-align:center;}
+.metric-box .n{font-size:2.3rem;font-weight:800;color:var(--acc);display:block;line-height:1;}
+.metric-box .l{color:var(--muted);font-size:.82rem;margin-top:8px;line-height:1.35;}
 
-/* Comparativa de relatos */
-.comp-table {
-  width:100%; border-collapse:collapse;
-  margin:30px 0; font-size:0.95rem;
-}
-.comp-table th, .comp-table td {
-  padding:12px 14px; text-align:left;
-  border-bottom:1px solid #1f3245; vertical-align:top;
-}
-.comp-table th {
-  color:var(--muted); font-weight:600;
-  font-size:0.82rem; text-transform:uppercase;
-  letter-spacing:0.05em;
-}
-.comp-table td:nth-child(2) { color:#dba8a8; }
-.comp-table td:nth-child(3) { color:#a8dbcc; }
+.quote{margin:36px 0;padding:24px 28px;background:linear-gradient(90deg,rgba(74,163,223,.08),transparent);
+  border-left:4px solid var(--acc);font-style:italic;font-size:1.08rem;}
+.quote .src{display:block;font-style:normal;color:var(--muted);font-size:.85rem;margin-top:8px;}
 
-/* Timeline */
-.tline { border-left:2px solid #2a3f56; padding-left:24px; margin:30px 0; }
-.tline > div { position:relative; margin-bottom:22px; }
-.tline > div::before {
-  content:''; position:absolute; left:-31px; top:8px;
-  width:12px; height:12px; border-radius:50%;
-  background:var(--acc); border:2px solid var(--bg);
-}
-.tline > div.bad::before { background:var(--bad); }
-.tline > div.warn::before { background:var(--warn); }
-.tline > div.ok::before { background:var(--ok); }
-.tline .date {
-  color:var(--acc); font-weight:600;
-  font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;
-}
-.tline.bad .date { color:var(--bad); }
-.tline.warn .date { color:var(--warn); }
-.tline.ok .date { color:var(--ok); }
+table.cmp{width:100%;border-collapse:collapse;margin:30px 0;font-size:.94rem;}
+table.cmp th,table.cmp td{padding:13px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;}
+table.cmp th{color:var(--muted);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;}
+table.cmp td:nth-child(2){color:#dba8a8;}
+table.cmp td:nth-child(3){color:#a8dbcc;}
 
-/* CTA final */
-.cta-section {
-  text-align:center; padding:80px 24px 100px;
-  background:linear-gradient(180deg, transparent, rgba(74,163,223,0.05));
-}
-.cta-section .links {
-  display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
-  margin-top:28px;
-}
-.cta-section .links a {
-  padding:11px 22px; background:#142434; color:var(--fg);
-  border:1px solid #1f3245; border-radius:8px;
-  text-decoration:none; font-size:0.95rem;
-  transition:all 0.2s;
-}
-.cta-section .links a:hover {
-  background:rgba(74,163,223,0.15); border-color:var(--acc);
-}
+.tline{border-left:2px solid #2a3f56;padding-left:24px;margin:30px 0;}
+.tline>div{position:relative;margin-bottom:22px;}
+.tline>div::before{content:'';position:absolute;left:-31px;top:8px;width:12px;height:12px;border-radius:50%;
+  background:var(--acc);border:2px solid var(--bg);}
+.tline>div.bad::before{background:var(--bad);}
+.tline>div.warn::before{background:var(--warn);}
+.tline>div.ok::before{background:var(--ok);}
+.tline .d{font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;color:var(--acc);}
+.tline>div.bad .d{color:var(--bad);} .tline>div.warn .d{color:var(--warn);} .tline>div.ok .d{color:var(--ok);}
 
-footer {
-  padding:40px 24px; text-align:center;
-  color:var(--muted); border-top:1px solid #1f3245;
-  font-size:0.88rem;
-}
-footer a { color:var(--acc); text-decoration:none; }
+/* Postura / veredicto */
+.verdict{background:linear-gradient(135deg,var(--panel),#172a3d);border:1px solid var(--acc);
+  border-radius:14px;padding:34px;margin:40px 0;}
+.verdict h3{margin-top:0;color:var(--acc);}
+.verdict .big{font-size:1.35rem;color:var(--fg);font-weight:600;margin:16px 0;}
 
-/* Scroll-driven reveal */
-.reveal {
-  opacity:0; transform:translateY(28px);
-  transition:opacity 0.7s ease, transform 0.7s ease;
-}
-.reveal.in {
-  opacity:1; transform:translateY(0);
-}
+/* Soluciones cards */
+.sol-grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin:32px 0;}
+.sol-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:24px;position:relative;}
+.sol-card .badge{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);}
+.sol-card h4{margin:10px 0 10px;font-size:1.12rem;color:var(--fg);}
+.sol-card p{font-size:.92rem;color:var(--muted);margin:0;}
+.sol-card .ref{display:block;margin-top:12px;font-size:.8rem;color:var(--acc);}
 
-/* Acto color tinting */
-.acto.acto-2 { background:linear-gradient(180deg, var(--bg), #16202c, var(--bg)); }
-.acto.acto-3 { background:#13283a; }
-.acto.acto-4 { background:linear-gradient(180deg, var(--bg), #0f1d2a); }
+.cta-section{text-align:center;padding:84px 24px 100px;background:linear-gradient(180deg,transparent,rgba(74,163,223,.05));}
+.cta-section .links{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:28px;}
+.cta-section .links a{padding:11px 22px;background:var(--panel);color:var(--fg);border:1px solid var(--line);
+  border-radius:8px;text-decoration:none;font-size:.94rem;transition:all .2s;}
+.cta-section .links a:hover{background:rgba(74,163,223,.15);border-color:var(--acc);}
 
-@media (max-width: 600px) {
-  .acto { padding:60px 18px; }
-  .acto-num { font-size:0.72rem; }
-  .quote { padding:18px 20px; font-size:1rem; }
-}
+footer{padding:40px 24px;text-align:center;color:var(--muted);border-top:1px solid var(--line);font-size:.86rem;}
+footer a{color:var(--acc);text-decoration:none;}
+
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+.block.b2{background:linear-gradient(180deg,var(--bg),#16202c,var(--bg));}
+.block.b3{background:var(--bg2);}
+.block.b4{background:linear-gradient(180deg,var(--bg),#13241f);}
+.block.b5{background:linear-gradient(180deg,var(--bg),#0f1d2a);}
+
+.disclaimer{background:#1a2a3c;border-left:3px solid var(--warn);padding:16px 20px;border-radius:4px;
+  color:#cdd6df;font-size:.93rem;max-width:740px;}
+
+@media(max-width:600px){section.block{padding:60px 18px;}.verdict{padding:24px;}}
 </style>
 </head>
 <body>
+<div id="progress"></div>
+
+<nav id="nav">
+  <a href="#hero" data-s="hero" title="Inicio"></a>
+  <a href="#s1" data-s="s1" title="El fenómeno"></a>
+  <a href="#s2" data-s="s2" title="El conflicto"></a>
+  <a href="#s3" data-s="s3" title="Método y datos"></a>
+  <a href="#s4" data-s="s4" title="Qué dice la evidencia"></a>
+  <a href="#s5" data-s="s5" title="Cómo se resuelve"></a>
+</nav>
 
 <!-- HERO -->
-<section class="hero">
-  <h1>El lago que se va</h1>
-  <p>La historia del descenso del Lago Caburga, en cuatro actos. Sin elegir un bando.</p>
-  <a class="cta" href="#acto-1">Empezar la historia ↓</a>
+<section class="hero" id="hero">
+  <div class="kicker">Estudio abierto · Geología y recursos hídricos</div>
+  <h1>El lago, los datos y el conflicto</h1>
+  <p>Qué dice realmente la evidencia sobre el descenso del Lago Caburga — y cómo otros lugares del mundo lograron destrabar conflictos idénticos.</p>
+  <a class="cta" href="#s1">Comenzar el recorrido ↓</a>
   <div class="scroll-hint">Desplázate</div>
 </section>
 
-<!-- ACTO 1 -->
-<section class="acto acto-1" id="acto-1">
-<div class="acto-inner">
-  <span class="acto-num reveal">Acto 1 · Un lago único</span>
-  <h2 class="reveal">Un lago que drena hacia adentro de la tierra</h2>
-
+<!-- 1. EL FENÓMENO -->
+<section class="block" id="s1">
+<div class="inner">
+  <span class="num reveal">01 · El fenómeno físico</span>
+  <h2 class="reveal">Un lago que se vacía hacia adentro de la tierra</h2>
   <p class="lede reveal">
-    A 23 km de Pucón, en plena cordillera de la Araucanía, hay un lago que no
-    funciona como los demás. Tiene <strong>327 metros de profundidad</strong> —el
-    segundo más profundo de los lagos araucanos— y a diferencia de todos sus
-    vecinos, sus aguas no salen por un río. Drenan bajo tierra, a través de los
-    Ojos del Caburga.
+    Antes de hablar de culpas, hay que entender cómo funciona este lago. El Caburga
+    es único en Chile: no drena por un río en superficie, sino bajo tierra, a través
+    de los <strong>Ojos del Caburga</strong>. Eso lo hace excepcionalmente sensible
+    a cualquier cambio en el agua que recibe.
   </p>
-
   <figure class="reveal">
     <img src="footage/wikimedia/ojos_2019_01.jpg" alt="Ojos del Caburga">
-    <figcaption>Ojos del Caburga · Wikimedia Commons CC BY-SA 4.0</figcaption>
+    <figcaption>Ojos del Caburga — el desagüe subterráneo natural del lago · Wikimedia Commons CC BY-SA 4.0</figcaption>
   </figure>
-
   <p class="reveal">
-    El lago es como una bañera con el tapón al fondo. Si entra menos agua de la
-    que sale por debajo, se vacía lentamente. Sus dos afluentes históricos eran
-    el <strong>Río Blanco</strong> (54% de la cuenca aportante) y un brazo del
-    <strong>Río Trafampulli</strong> que durante miles de años llevaba parte de
-    su caudal a este lago, antes de seguir hacia el Lago Colico vecino.
+    Imagina una bañera con el tapón <em>al fondo</em>, no en el borde. Un lago común
+    deja de bajar cuando llega al nivel de su río de salida. El Caburga puede seguir
+    vaciándose mucho más, porque su salida está abajo. Si entra menos agua de la que
+    se filtra, el nivel cae sin freno natural. Por eso un déficit que en otro lago
+    sería leve, aquí se amplifica.
   </p>
-
-  <h3 class="reveal">Y luego, el agua empezó a irse</h3>
-
-  <figure class="reveal">
-    <img src="assets/antes_despues_lago.jpg" alt="Antes/durante/después de la sequía">
-    <figcaption>Tres momentos del lago: 2019 (estado normal), 2022 (sequía profunda), 2024 (recuperación)</figcaption>
-  </figure>
-
   <div class="metric-row reveal">
-    <div class="metric-box"><span class="num">−25%</span><div class="lbl">caída del nivel<br>2000-2010 vs 2011-2020</div></div>
-    <div class="metric-box"><span class="num">300 m</span><div class="lbl">de playa expuesta<br>donde antes había 1 m</div></div>
-    <div class="metric-box"><span class="num">15 años</span><div class="lbl">de descenso continuo<br>sin precedentes modernos</div></div>
+    <div class="metric-box"><span class="n">327 m</span><div class="l">profundidad máxima<br>(Campos, 1987)</div></div>
+    <div class="metric-box"><span class="n">53 km²</span><div class="l">superficie del espejo</div></div>
+    <div class="metric-box"><span class="n">335 km²</span><div class="l">cuenca aportante</div></div>
+    <div class="metric-box"><span class="n">~20 m³/s</span><div class="l">salida por los Ojos<br>(estimado)</div></div>
   </div>
-
-  <p class="reveal">
-    Entre 2010 y 2022, el descenso fue dramático. Aparecieron 300 metros de
-    playa donde antes había agua. Vecinos vieron desaparecer humedales, muelles
-    quedaron en seco, y en redes sociales empezaron a circular fotos
-    comparativas. La pregunta era una sola: ¿por qué?
-  </p>
+  <figure class="reveal">
+    <img src="assets/antes_despues_lago.jpg" alt="El lago en 2019, 2022 y 2024">
+    <figcaption>Tres momentos: 2019 normal · 2022 sequía profunda · 2024 recuperación tras El Niño</figcaption>
+  </figure>
 </div>
 </section>
 
-<!-- ACTO 2 -->
-<section class="acto acto-2" id="acto-2">
-<div class="acto-inner">
-  <span class="acto-num reveal">Acto 2 · El dique</span>
-  <h2 class="reveal">Una pared de piedra y cemento</h2>
-
+<!-- 2. EL CONFLICTO -->
+<section class="block b2" id="s2">
+<div class="inner">
+  <span class="num reveal">02 · El conflicto</span>
+  <h2 class="reveal">Dos relatos que llevan 18 años enfrentados</h2>
   <p class="lede reveal">
-    Para los vecinos del lago, la respuesta era evidente: en 2007 la
-    Dirección General de Aguas obligó a un propietario privado a construir
-    un dique que cerró el brazo del río Trafampulli. Sin estudio de impacto
-    ambiental.
+    La comunidad cree que el lago se seca por un dique que en 2007 cortó un brazo
+    del río Trafampulli. Las autoridades sostienen que la causa es la megasequía.
+    El conflicto escaló hasta la Corte Suprema — pero ningún fallo lo ha resuelto.
   </p>
-
-  <p class="reveal">
-    Pero la historia es más enredada. En 2005, vecinos del Lago Colico
-    denunciaron al señor Marcelo Benito, dueño del Fundo Llanqui-Llanqui,
-    diciendo que él había modificado el cauce para llevar más agua al
-    Caburga. La DGA, basada en esa denuncia, ordenó construir el dique
-    para "restaurar el cauce natural" del río hacia el Colico. El brazo
-    al Caburga se secó.
-  </p>
-
   <div class="quote reveal">
-    "Aseveró y doy fe que desde tiempos inmemoriales siempre existió un
-    brazo del Río Trafampulli al Lago Caburgua, hecho conocido por los
-    lugareños del sector."
+    "Aseveré y doy fe que desde tiempos inmemoriales siempre existió un brazo del
+    Río Trafampulli al Lago Caburgua, hecho conocido por los lugareños del sector."
     <span class="src">— Gastón Holzapfel Gross, citado en oficio DGA 1718, 2006</span>
   </div>
-
   <p class="reveal">
-    Aerofotografías del Servicio Aerofotogramétrico de Chile de 1979,
-    1994, 1998 y 2007 muestran el cauce activo. Pero la DGA, con base en
-    la denuncia de los vecinos del Colico y otras observaciones, decidió
-    cerrarlo de todos modos.
+    Aerofotografías de 1979, 1994, 1998 y 2007 muestran el brazo activo. En 2005,
+    vecinos del Lago Colico denunciaron que un privado lo había desviado. La DGA
+    ordenó construir el dique para "restaurar el cauce natural" hacia el Colico. El
+    brazo al Caburga se secó.
   </p>
-
-  <h3 class="reveal">Dieciséis años, miles de cartas, ningún cambio</h3>
-
-  <p class="reveal">
-    Durante los siguientes quince años, vecinos, asociaciones y autoridades
-    comunales pidieron a la DGA destruir el dique. Hubo estudios técnicos,
-    cartas, peticiones, una mesa de análisis que se diluyó. Nada cambió.
-  </p>
-
+  <h3 class="reveal">Cuando la institucionalidad no respondió, la comunidad actuó</h3>
   <div class="quote reveal" style="border-color:var(--ok);">
-    El 16 de mayo de 2022, una comunidad mapuche del sector decidió actuar.
-    Cuatro días con palas y manos. El dique cayó. El agua del Trafampulli
-    volvió al Lago Caburga.
+    El 16 de mayo de 2022, tras 16 años de peticiones sin respuesta, una comunidad
+    mapuche del sector derribó el dique con palas y manos en cuatro días. El agua
+    del Trafampulli volvió al lago.
   </div>
-
-  <p class="reveal">
-    La respuesta institucional llegó rápido. La DGA ordenó reconstruir el
-    dique. La Municipalidad de Pucón presentó un recurso de protección.
-    La Corte de Apelaciones de Temuco, en marzo de 2025, dio orden de no
-    innovar. Pero el 5 de agosto de 2025 la <strong>Corte Suprema
-    revocó</strong> ese fallo y autorizó a la DGA a reconstruir.
-  </p>
-
   <div class="tline reveal">
-    <div class="warn">
-      <span class="date">2007 · Of. DGA 347</span>
-      <p>DGA obliga a construir el dique. Sin EIA.</p>
-    </div>
-    <div class="bad">
-      <span class="date">2009</span>
-      <p>Dique entra en operación. Caudal hacia Caburga = 0.</p>
-    </div>
-    <div class="ok">
-      <span class="date">16 mayo 2022</span>
-      <p>Comunidad mapuche destruye el dique tras 4 días de trabajo manual.</p>
-    </div>
-    <div class="warn">
-      <span class="date">31 enero 2023</span>
-      <p>Resolución DGA: ordena reconstruir el dique.</p>
-    </div>
-    <div class="bad">
-      <span class="date">5 agosto 2025</span>
-      <p>Corte Suprema autoriza reconstrucción.</p>
-    </div>
-    <div class="bad">
-      <span class="date">Diciembre 2025</span>
-      <p>DGA mide: solo 4% del Estero La Cascada llega al lago. Anuncia cierre.</p>
-    </div>
+    <div class="warn"><span class="d">2007 · Oficio DGA 347</span><p>Se ordena construir el dique. Sin estudio de impacto ambiental.</p></div>
+    <div class="bad"><span class="d">2010</span><p>Inicia la megasequía centro-sur de Chile.</p></div>
+    <div class="ok"><span class="d">16 may 2022</span><p>La comunidad mapuche derriba el dique.</p></div>
+    <div class="warn"><span class="d">31 ene 2023</span><p>La DGA ordena reconstruirlo.</p></div>
+    <div class="ok"><span class="d">2023-2024</span><p>El Niño: el lago recupera +350 m de costa.</p></div>
+    <div class="bad"><span class="d">5 ago 2025</span><p>Corte Suprema autoriza reconstruir el dique.</p></div>
+    <div class="bad"><span class="d">dic 2025</span><p>DGA mide 4% del cauce llega al lago. Anuncia cierre. Gobernador y comunidades se oponen.</p></div>
   </div>
 </div>
 </section>
 
-<!-- ACTO 3 -->
-<section class="acto acto-3" id="acto-3">
-<div class="acto-inner">
-  <span class="acto-num reveal">Acto 3 · Los datos</span>
-  <h2 class="reveal">¿Y si los dos relatos contienen verdad?</h2>
-
+<!-- 3. MÉTODO Y DATOS -->
+<section class="block b3" id="s3">
+<div class="inner">
+  <span class="num reveal">03 · Método y datos</span>
+  <h2 class="reveal">Cómo investigamos esto — con datos abiertos</h2>
   <p class="lede reveal">
-    Dos universidades estudiaron el problema con datos. La Universidad
-    Austral en 2021, encargada por la Asociación Caburga Sustentable.
-    La Universidad de Chile en 2022, encargada por la propia DGA.
-    Llegaron a estimaciones distintas, pero a una conclusión coincidente:
-    la sequía es el factor principal.
+    Este estudio no parte de una postura. Parte de los datos públicos disponibles y
+    de los dos informes técnicos universitarios. Toda la cadena es reproducible: el
+    código y los datos están abiertos.
+  </p>
+  <p class="reveal">
+    Usamos <strong>tres fuentes de precipitación independientes</strong> para no
+    depender de una sola: las estaciones del Centro de Ciencia del Clima (CR2), el
+    reanálisis satelital ERA5 vía Open-Meteo (1950-2025), y el producto grillado
+    CR2MET. Combinamos esto con caudales de ríos vecinos, cobertura de nieve por
+    satélite e imágenes Sentinel-2.
+  </p>
+  <figure class="reveal">
+    <img src="assets/precip_larga_1950_2025.png" alt="Precipitación 1950-2025">
+    <figcaption>Precipitación anual del Lago Caburga 1950-2025 (ERA5). Se ve la sequía sostenida desde 2010, la recuperación de 2022-2023 (El Niño) y el nuevo descenso de 2025 (La Niña).</figcaption>
+  </figure>
+  <h3 class="reveal">Honestidad metodológica: los datos no siempre coinciden</h3>
+  <p class="reveal">
+    Un buen estudio muestra sus límites. Los distintos productos de datos dan
+    magnitudes distintas para la misma caída de lluvia. La estación CR2 (medición
+    directa, en altura) detecta un descenso de <strong>−34%</strong>; el reanálisis
+    ERA5, de resolución más gruesa, lo suaviza a <strong>−7%</strong>. Para terreno
+    de montaña, la medición directa es más confiable — pero mostramos ambas.
+  </p>
+  <figure class="reveal">
+    <img src="assets/precip_productos.png" alt="Comparación de productos de datos">
+    <figcaption>CR2 estación vs ERA5 reanálisis. La discrepancia es una característica conocida de los reanálisis en zonas montañosas, no un error.</figcaption>
+  </figure>
+</div>
+</section>
+
+<!-- 4. QUÉ DICE LA EVIDENCIA -->
+<section class="block b4" id="s4">
+<div class="inner">
+  <span class="num reveal">04 · La evidencia</span>
+  <h2 class="reveal">Nuestra postura, basada en datos</h2>
+  <p class="lede reveal">
+    Cuando se cruzan todas las fuentes, la evidencia apunta en una dirección clara —
+    pero incómoda para los dos bandos. Aquí tomamos postura, porque para eso sirve
+    la ciencia: no para quedar bien, sino para iluminar la decisión.
   </p>
 
-  <table class="comp-table reveal">
-    <tr>
-      <th></th>
-      <th>U. Austral 2021</th>
-      <th>U. de Chile 2022</th>
-    </tr>
-    <tr>
-      <td>Caudal histórico Trafampulli al Caburga</td>
-      <td>1 a 2 m³/s</td>
-      <td>~0.3 m³/s</td>
-    </tr>
-    <tr>
-      <td>Rol del dique</td>
-      <td>"Exacerba el efecto climático"</td>
-      <td>"Marginal, no de primer orden"</td>
-    </tr>
-    <tr>
-      <td>Rol de la sequía</td>
-      <td>Causa principal</td>
-      <td>Causa principal</td>
-    </tr>
-    <tr>
-      <td>Método</td>
-      <td>Análisis estadístico de tendencias</td>
-      <td>Balance hídrico calibrado (R²=0.64)</td>
-    </tr>
+  <table class="cmp reveal">
+    <tr><th>Pregunta</th><th>Relato del dique</th><th>Relato del clima</th></tr>
+    <tr><td>Estudio que lo respalda</td><td>U. Austral 2021</td><td>U. de Chile 2022</td></tr>
+    <tr><td>Aporte histórico Trafampulli</td><td>1 a 2 m³/s</td><td>~0,3 m³/s</td></tr>
+    <tr><td>Método</td><td>Tendencias estadísticas</td><td>Balance hídrico calibrado (R²=0,64)</td></tr>
+    <tr><td>Conclusión sobre la sequía</td><td>"Exacerba" el descenso</td><td>"Causa de primer orden"</td></tr>
   </table>
 
-  <h3 class="reveal">La precipitación cayó más arriba que abajo</h3>
-
-  <figure class="reveal">
-    <img src="assets/precip_anomalias.png" alt="Anomalías de precipitación con eventos">
-    <figcaption>Anomalía de precipitación cuenca Caburga vs promedio 1965-2009 · datos CR2</figcaption>
-  </figure>
-
   <p class="reveal">
-    Y un dato revelador: la caída de precipitación no fue uniforme.
-    La estación del propio Lago Caburga (en altura) perdió un <strong>34%</strong>
-    de su lluvia. La estación de Pucón (más abajo) solo un 11%.
-    Es una señal climática real, asociada a la elevación.
+    Dato clave: la caída de lluvia <strong>no fue uniforme</strong>. La estación en
+    altura (Lago Caburga) perdió 34%; la de Pucón, abajo, solo 11%. Es una huella
+    climática real, ligada a la elevación. Y la cobertura de nieve de la cuenca cayó
+    de 56% a 27%.
   </p>
-
   <div class="metric-row reveal">
-    <div class="metric-box"><span class="num">−34%</span><div class="lbl">estación Lago Caburga<br>post-2010</div></div>
-    <div class="metric-box"><span class="num">−22%</span><div class="lbl">Lago Tinquilco</div></div>
-    <div class="metric-box"><span class="num">−11%</span><div class="lbl">Pucón (zona baja)</div></div>
-    <div class="metric-box"><span class="num">56→27%</span><div class="lbl">cobertura de nieve<br>en la cuenca</div></div>
+    <div class="metric-box"><span class="n">−34%</span><div class="l">lluvia estación<br>Lago Caburga</div></div>
+    <div class="metric-box"><span class="n">−11%</span><div class="l">lluvia Pucón<br>(zona baja)</div></div>
+    <div class="metric-box"><span class="n">56→27%</span><div class="l">cobertura de nieve</div></div>
+    <div class="metric-box"><span class="n">+350 m</span><div class="l">recuperó con El Niño<br>sin remover dique</div></div>
   </div>
-
-  <h3 class="reveal">El balance hídrico simulado</h3>
 
   <figure class="reveal">
     <img src="assets/infografia_atribucion.png" alt="Atribución 80/20">
-    <figcaption>Modelo simplificado calibrado contra U. Chile 2022</figcaption>
+    <figcaption>Resultado del balance hídrico simplificado, calibrado contra el modelo de U. Chile 2022.</figcaption>
   </figure>
 
-  <p class="reveal">
-    Cuando combinamos los datos en un balance hídrico, el resultado es
-    incómodo para los dos relatos. <strong>Ni "es solo el clima" ni "es
-    solo el dique"</strong>: es ambos. Pero no en partes iguales. La
-    megasequía explica aproximadamente el 80% del descenso; el dique,
-    el 20% restante. La prueba más concluyente: cuando llegó El Niño en
-    2024, el lago recuperó +350 m de costa <em>sin remover el dique</em>.
-  </p>
+  <div class="verdict reveal">
+    <h3>Nuestra postura</h3>
+    <p class="big">La causa de primer orden es la megasequía. El dique es un
+    agravante real pero secundario — del orden del 20%.</p>
+    <p>La prueba más concluyente: cuando llegó El Niño en 2024, el lago recuperó
+    +350 m de costa <strong>sin remover el dique</strong>. Si el dique fuera la
+    causa principal, eso no habría sido posible. <br><br>
+    Pero —y esto es clave para la convivencia— "secundario" no es "irrelevante". En
+    un clima que se seca, cada metro cúbico cuenta. Cerrar uno de los pocos aportes
+    que el lago todavía recibe, en plena tendencia a la baja, es una decisión que la
+    evidencia no respalda como necesaria. El dique no causó la sequía, pero
+    reconstruirlo le quita al lago un margen que hoy es valioso.</p>
+  </div>
 </div>
 </section>
 
-<!-- ACTO 4 -->
-<section class="acto acto-4" id="acto-4">
-<div class="acto-inner">
-  <span class="acto-num reveal">Acto 4 · Lo que sigue</span>
-  <h2 class="reveal">Lo más impactante es lo que no se midió</h2>
-
+<!-- 5. CÓMO SE RESUELVE -->
+<section class="block b5" id="s5">
+<div class="inner">
+  <span class="num reveal">05 · El camino de salida</span>
+  <h2 class="reveal">Cómo otros lugares destrabaron el mismo conflicto</h2>
   <p class="lede reveal">
-    Durante todo el conflicto —dieciocho años de denuncias, fallos,
-    estudios y acción comunitaria— las cosas que importaban no se
-    midieron.
+    Caburga no es el primer lago del mundo atrapado entre sequía e intervención
+    humana. Los casos que se resolvieron tienen un patrón común — y los que se
+    estancaron, también. La buena noticia: hay un camino probado.
   </p>
 
+  <h3 class="reveal">El modelo que funcionó: Mono Lake (California)</h3>
   <p class="reveal">
-    No hay una estación de medición de caudal en el Río Blanco —el
-    afluente principal del lago— hasta noviembre de 2021. No hay
-    estación limnimétrica en el Lago Colico, el otro lado de la
-    historia. No hay caudal medido del propio Trafampulli al punto donde
-    se desviaba. La última batimetría del lago es de 1987. Ambos
-    estudios universitarios identifican esto como el problema más grave:
-    estamos discutiendo causas con datos que nunca se recolectaron.
+    Idéntico a Caburga: una ciudad desvió los afluentes, el lago bajó 14 m, colapsó
+    el ecosistema. ¿Cómo se resolvió? No con un juicio ganado, sino con tres cosas:
+    un <strong>nivel-objetivo acordado</strong> (una cota meta que equilibra
+    ecosistema, paisaje y uso del agua), <strong>ciencia independiente con monitoreo
+    permanente</strong>, y reuniones periódicas de <em>todas</em> las partes. El
+    acueducto sigue funcionando, pero regulado para alcanzar esa cota.
   </p>
 
-  <figure class="reveal">
-    <img src="assets/cota_animada.gif" alt="Animación del nivel del lago en el tiempo">
-    <figcaption>Cota anual del Lago Caburga 2000-2020 con eventos clave (estimación)</figcaption>
-  </figure>
+  <div class="sol-grid reveal">
+    <div class="sol-card">
+      <span class="badge">Paso 1</span>
+      <h4>Datos compartidos y transparentes</h4>
+      <p>Que todos miren los mismos números. Integrar la red DGA con el monitoreo
+      ciudadano (Vigilantes del Lago) en una plataforma abierta.</p>
+      <span class="ref">→ este proyecto es un primer paso</span>
+    </div>
+    <div class="sol-card">
+      <span class="badge">Paso 2</span>
+      <h4>Un nivel-objetivo medible</h4>
+      <p>Reemplazar "¿de quién es la culpa?" por "¿qué cota queremos para el lago?".
+      Convierte una pelea identitaria en un problema técnico solucionable.</p>
+      <span class="ref">→ modelo Mono Lake (cota 6.392 ft)</span>
+    </div>
+    <div class="sol-card">
+      <span class="badge">Paso 3</span>
+      <h4>Estaciones de medición reales</h4>
+      <p>Instalar medición de caudal en el Río Blanco, el Trafampulli y los Ojos.
+      Hoy se discute sin medir lo que importa. Sin datos no hay acuerdo durable.</p>
+      <span class="ref">→ recomendado por ambos estudios</span>
+    </div>
+    <div class="sol-card">
+      <span class="badge">Paso 4</span>
+      <h4>Protección legal del lago</h4>
+      <p>Una figura como Humedal o Santuario de la Naturaleza, que obligue a gestión
+      activa y limite las amenazas — más allá del gobierno de turno.</p>
+      <span class="ref">→ modelo Aculeo (Humedal Urbano, 2025)</span>
+    </div>
+    <div class="sol-card">
+      <span class="badge">Paso 5</span>
+      <h4>Gestión integral de cuenca</h4>
+      <p>El problema no es solo el dique: son los derechos de agua, el Río Blanco, la
+      nieve. Gestionar toda la cuenca, no un solo punto de conflicto.</p>
+      <span class="ref">→ modelo Urmia (Irán)</span>
+    </div>
+    <div class="sol-card">
+      <span class="badge">Paso 6</span>
+      <h4>Aprovechar la ventana de El Niño</h4>
+      <p>La recuperación por lluvia es una oportunidad para acordar con calma, no
+      una señal de que el problema se resolvió solo.</p>
+      <span class="ref">→ lección de Aculeo</span>
+    </div>
+  </div>
 
-  <h3 class="reveal">La nueva amenaza, diciembre 2025</h3>
+  <div class="disclaimer reveal" style="margin-top:40px;">
+    <strong>Lo que la experiencia mundial enseña:</strong> ningún conflicto de este
+    tipo se resolvió ganando un juicio. El fallo de la Corte Suprema de agosto 2025,
+    sin un acuerdo de gobernanza detrás, probablemente solo prolonga el conflicto —
+    como pasó en Owens Valley antes del acuerdo de Mono Lake. La salida es técnica y
+    colaborativa, no judicial.
+  </div>
 
+  <h3 class="reveal">Una invitación, no una sentencia</h3>
   <p class="reveal">
-    A diciembre de 2025, la DGA volvió a anunciar que cerrará el cauce.
-    Esta vez argumenta que solo el 4% del agua del Estero La Cascada
-    —su nombre oficial para el brazo en disputa— llega efectivamente
-    al lago, según mediciones en 11 puntos. Vecinos, gobernador
-    regional y comunidades indígenas se oponen. La pregunta de fondo
-    sigue abierta: en un Chile que se seca, ¿tiene sentido cerrar uno
-    de los pocos aportes adicionales que el lago todavía recibe, aunque
-    sea pequeño?
-  </p>
-
-  <h3 class="reveal">Una invitación, no una conclusión</h3>
-
-  <p class="reveal">
-    Esta historia no tiene un final cómodo. Lo que sí tiene es una
-    invitación: que la conversación se base en datos, no en trincheras.
-    Hicimos abierto todo lo que encontramos —los estudios, los datos,
-    los códigos, las imágenes—. El balance hídrico se puede ajustar con
-    sliders en un dashboard. Si tienes una hipótesis distinta, puedes
-    probarla. Si encuentras un error, puedes corregirlo.
-  </p>
-
-  <p class="reveal">
-    El Lago Caburga sobrevivió a la sequía de los años cuarenta.
-    Sobrevivirá a esta también. Lo que se pone en juego ahora es qué
-    decisiones tomamos hoy, mientras hay agua suficiente para
-    discutirlas con calma.
+    Este estudio toma postura porque la evidencia lo permite. Pero su objetivo no es
+    ganar la discusión: es darle a la comunidad, a las autoridades y a los
+    científicos un terreno común de datos para que la decisión se tome con calma,
+    mientras todavía hay agua para discutirla. El Lago Caburga sobrevivió a las
+    sequías de los años 40 y 90. Sobrevivirá a esta. La pregunta es con qué
+    institucionalidad llegamos a la próxima.
   </p>
 </div>
 </section>
 
-<!-- CTA FINAL -->
 <section class="cta-section">
-  <h2 style="margin-bottom:14px;">Explora los datos</h2>
-  <p style="color:var(--muted);">Todo este proyecto es código y datos abiertos.</p>
+  <h2 style="margin-bottom:14px;">Explora la evidencia tú mismo</h2>
+  <p style="color:var(--muted);">Todo este estudio es código y datos abiertos. Verifícalo, corrígelo, mejóralo.</p>
   <div class="links">
     <a href="index.html">Resumen del proyecto</a>
     <a href="https://github.com/MendozaVolcanic/lago-caburga">Repositorio GitHub</a>
-    <a href="https://github.com/MendozaVolcanic/lago-caburga/blob/main/HISTORIA_TRAFAMPULLI.md">Cronología detallada</a>
+    <a href="https://github.com/MendozaVolcanic/lago-caburga/blob/main/CASOS_ANALOGOS.md">Casos análogos</a>
+    <a href="https://github.com/MendozaVolcanic/lago-caburga/blob/main/HISTORIA_TRAFAMPULLI.md">Cronología completa</a>
     <a href="https://github.com/MendozaVolcanic/lago-caburga/blob/main/FUENTES_DATOS.md">Fuentes de datos</a>
-    <a href="https://github.com/MendozaVolcanic/lago-caburga/blob/main/STORYBOARD.md">Storyboard</a>
   </div>
 </section>
 
 <footer>
-  <p>Datos bajo CC BY 4.0 · Código bajo MIT · Imágenes Wikimedia Commons CC BY-SA<br>
-  Una investigación abierta · <a href="https://github.com/MendozaVolcanic/lago-caburga">github.com/MendozaVolcanic/lago-caburga</a></p>
+  <p>Estudio abierto · Datos CC BY 4.0 · Código MIT · Imágenes Wikimedia Commons CC BY-SA<br>
+  Fuentes: CR2, DGA, Open-Meteo (ERA5), U. Austral, U. de Chile · <a href="https://github.com/MendozaVolcanic/lago-caburga">github.com/MendozaVolcanic/lago-caburga</a></p>
 </footer>
 
 <script>
-// Reveal on scroll
-const obs = new IntersectionObserver((entries) => {
-  for (const e of entries) {
-    if (e.isIntersecting) {
-      e.target.classList.add('in');
-      obs.unobserve(e.target);
-    }
-  }
-}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-</script>
+const obs=new IntersectionObserver((es)=>{for(const e of es){if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}}},{threshold:.1,rootMargin:'0px 0px -60px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
+// Progress bar
+const prog=document.getElementById('progress');
+addEventListener('scroll',()=>{const h=document.documentElement;const p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;prog.style.width=p+'%';});
+
+// Nav dots active state
+const dots=document.querySelectorAll('#nav a');
+const secs=[...dots].map(d=>document.getElementById(d.dataset.s));
+const navObs=new IntersectionObserver((es)=>{for(const e of es){if(e.isIntersecting){const id=e.target.id;dots.forEach(d=>d.classList.toggle('active',d.dataset.s===id));}}},{threshold:.5});
+secs.forEach(s=>{if(s)navObs.observe(s);});
+</script>
 </body>
 </html>

@@ -4,6 +4,35 @@ Inventario de fuentes públicas, con URL directos cuando existen, y observacione
 sobre dificultad de acceso programático. Ordenado de más útil a más limitado
 para nuestro caso.
 
+## 0. Open-Meteo (ERA5) ✅ USADO — el mejor para datos recientes
+
+URL: <https://open-meteo.com/en/docs/historical-weather-api>
+
+**La mejor fuente para cobertura hasta HOY.** CR2 termina en 2020; Open-Meteo
+llega al presente. Reanálisis ERA5 (~25 km) desde 1940, ERA5-Land (~9 km) desde
+1950. **Sin API key, CC BY 4.0, descarga programática directa.**
+
+Endpoint archivo: `https://archive-api.open-meteo.com/v1/archive`
+Ejemplo Caburga:
+```
+https://archive-api.open-meteo.com/v1/archive?latitude=-39.20&longitude=-71.81
+  &start_date=1950-01-01&end_date=2025-12-31
+  &daily=precipitation_sum,temperature_2m_mean,snowfall_sum
+  &timezone=America/Santiago
+```
+
+Variables útiles: `precipitation_sum`, `temperature_2m_mean`, `snowfall_sum`,
+`et0_fao_evapotranspiration`, `soil_moisture_*`.
+
+**Limitación importante:** ERA5 a 25 km **suaviza** la precipitación en montaña.
+Para Caburga muestra -7% post-2010, mientras la estación CR2 (medición directa)
+muestra -34%. Para magnitudes precisas en terreno montañoso, preferir estación;
+Open-Meteo es ideal para tendencia general y años recientes (2021-2025).
+
+Script: `scripts/fetch_openmeteo.py` → `data/processed/openmeteo_*.csv`
+
+---
+
 ## 1. CR2 — Centro de Ciencia del Clima y la Resiliencia ✅ USADO
 
 URL: <https://www.cr2.cl/>
