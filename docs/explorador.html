@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<title>Lago Caburga · Explorador de datos</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Gráficos interactivos del Lago Caburga: precipitación 1950-2025, curva de doble masa y la divergencia precipitación-nivel.">
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6"></script>
+<style>
+:root{--bg:#0e1a24;--bg2:#13283a;--panel:#142434;--fg:#e8eef5;--muted:#7c8fa1;
+  --acc:#4aa3df;--warn:#e6a23c;--bad:#c0392b;--ok:#27ae60;--line:#1f3245;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--bg);color:var(--fg);line-height:1.6;}
+header{padding:60px 24px 30px;text-align:center;background:linear-gradient(180deg,#13283a,var(--bg));}
+header h1{margin:0 0 10px;font-size:clamp(1.8rem,4vw,2.6rem);}
+header p{color:var(--muted);max-width:680px;margin:0 auto;}
+header a{color:var(--acc);text-decoration:none;}
+.wrap{max-width:1000px;margin:0 auto;padding:24px;}
+section{margin-bottom:60px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px 28px;}
+section h2{margin:0 0 8px;font-size:1.4rem;}
+section .sub{color:var(--muted);font-size:.94rem;margin:0 0 20px;max-width:720px;}
+.chart{overflow-x:auto;}
+.insight{margin-top:18px;padding:14px 18px;background:rgba(74,163,223,.08);border-left:3px solid var(--acc);
+  border-radius:4px;font-size:.92rem;color:#cdd6df;}
+.controls{display:flex;gap:14px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
+.controls label{font-size:.86rem;color:var(--muted);}
+button.play{background:var(--acc);color:#fff;border:none;border-radius:8px;padding:8px 18px;cursor:pointer;font-size:.9rem;}
+button.play:hover{background:#5fb0e8;}
+.legend-enso{display:flex;gap:18px;font-size:.82rem;color:var(--muted);margin-bottom:12px;}
+.legend-enso span{display:inline-flex;align-items:center;gap:6px;}
+.legend-enso i{width:14px;height:14px;border-radius:3px;display:inline-block;}
+footer{text-align:center;padding:40px 24px;color:var(--muted);border-top:1px solid var(--line);font-size:.85rem;}
+footer a{color:var(--acc);text-decoration:none;}
+/* Observable Plot dark */
+figure{margin:0;}
+svg{background:transparent!important;}
+</style>
+</head>
+<body>
+<header>
+  <h1>📊 Explorador de datos del Lago Caburga</h1>
+  <p>Gráficos interactivos para entender la historia del lago con tus propios ojos. Datos abiertos: CR2, Open-Meteo (ERA5), U. Austral. <a href="index.html">← Volver al estudio</a></p>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <h2>1 · Precipitación 1950-2025 con fases El Niño / La Niña</h2>
+    <p class="sub">La línea sigue la lluvia anual en el lago. Las bandas de color marcan los años de El Niño (más lluvia) y La Niña (sequía). Observa cómo la recuperación de 2022-2024 coincide con El Niño, y el nuevo descenso de 2025 con La Niña.</p>
+    <div class="legend-enso">
+      <span><i style="background:rgba(74,163,223,.35)"></i> El Niño (húmedo)</span>
+      <span><i style="background:rgba(192,57,43,.35)"></i> La Niña (seco)</span>
+      <span><i style="background:var(--warn)"></i> media móvil 5 años</span>
+    </div>
+    <div class="chart" id="c1"></div>
+    <div class="insight" id="i1"></div>
+  </section>
+
+  <section>
+    <h2>2 · Curva de doble masa — la prueba del cambio de régimen</h2>
+    <p class="sub">Esta es la técnica clave. Comparamos la lluvia acumulada del Caburga (eje vertical) contra la de sus vecinos (eje horizontal). Mientras ambos responden al mismo clima, los puntos forman una <strong>línea recta</strong>. Un quiebre de pendiente indica que algo cambió <em>solo</em> en Caburga. La línea punteada proyecta dónde debería estar si nada hubiera cambiado.</p>
+    <div class="chart" id="c2"></div>
+    <div class="insight" id="i2"></div>
+  </section>
+
+  <section>
+    <h2>3 · Lluvia vs nivel: el "camino del tiempo"</h2>
+    <p class="sub">Cada punto es un año. La línea los conecta en orden cronológico. Si el nivel respondiera solo a la lluvia, el camino sería estable. Cuando la nube "se desprende hacia abajo" (mismo nivel de lluvia, menos agua en el lago), aparece la huella del factor no-climático.</p>
+    <div class="controls">
+      <button class="play" id="playBtn">▶ Animar por año</button>
+      <label id="yearLabel"></label>
+    </div>
+    <div class="chart" id="c3"></div>
+    <div class="insight" id="i3"></div>
+  </section>
+
+</div>
+
+<footer>
+  Datos CC BY 4.0 · Construido con Observable Plot + D3 · <a href="https://github.com/MendozaVolcanic/lago-caburga">github.com/MendozaVolcanic/lago-caburga</a>
+</footer>
+
+<script>
+const COL = {bg:'#0e1a24',fg:'#e8eef5',muted:'#7c8fa1',acc:'#4aa3df',warn:'#e6a23c',bad:'#c0392b',ok:'#27ae60'};
+const plotStyle = {background:'transparent', color:COL.fg, fontSize:13};
+
+function movingAvg(data, key, win=5){
+  return data.map((d,i)=>{
+    const s=Math.max(0,i-Math.floor(win/2)), e=Math.min(data.length,i+Math.ceil(win/2));
+    const slice=data.slice(s,e).map(x=>x[key]);
+    return {año:d.año, avg:slice.reduce((a,b)=>a+b,0)/slice.length};
+  });
+}
+
+fetch('data/series.json').then(r=>r.json()).then(D=>{
+  // ---------- Chart 1: timeline + ENSO ----------
+  const pr = D.precip_openmeteo;
+  const baseline = D.meta.baseline_precip;
+  const ensoRects = [];
+  pr.forEach(d=>{
+    if(D.enso.nino.includes(d.año)) ensoRects.push({x1:d.año-0.5,x2:d.año+0.5,phase:'niño'});
+    if(D.enso.nina.includes(d.año)) ensoRects.push({x1:d.año-0.5,x2:d.año+0.5,phase:'niña'});
+  });
+  const ma = movingAvg(pr,'precip',5);
+  const c1 = Plot.plot({
+    ...plotStyle, width:920, height:420, marginLeft:55, marginBottom:40,
+    x:{label:'Año', tickFormat:'d'},
+    y:{label:'Precipitación (mm/año)', grid:true},
+    marks:[
+      Plot.rect(ensoRects, {x1:'x1',x2:'x2',y1:0,y2:4200,
+        fill:d=>d.phase==='niño'?COL.acc:COL.bad, fillOpacity:0.13}),
+      Plot.ruleY([baseline], {stroke:COL.fg, strokeDasharray:'4,3', strokeOpacity:0.5}),
+      Plot.barY(pr, {x:'año', y:'precip', fill:d=>d.precip<baseline?COL.bad:COL.acc, fillOpacity:0.75}),
+      Plot.line(ma, {x:'año', y:'avg', stroke:COL.warn, strokeWidth:2.5}),
+      Plot.ruleX(D.eventos.map(e=>e.año), {stroke:COL.muted, strokeDasharray:'2,2', strokeOpacity:0.5}),
+      Plot.text(D.eventos, {x:'año', y:4100, text:'label', rotate:-90, textAnchor:'start',
+        dx:-4, fill:COL.muted, fontSize:9})
+    ]
+  });
+  document.getElementById('c1').append(c1);
+  const last=pr[pr.length-1], prev=pr[pr.length-2];
+  document.getElementById('i1').innerHTML =
+    `📍 En 2025 la lluvia volvió a caer a <strong>${last.precip} mm</strong> (La Niña), tras el pico de ${pr.find(d=>d.año===2023)?.precip||'—'} mm en 2023 (El Niño). El promedio histórico pre-2010 era ${baseline} mm.`;
+
+  // ---------- Chart 2: double mass ----------
+  const dm = D.doble_acumulada;
+  // Regresión del tramo temprano (primeros ~60%) para proyectar
+  const nEarly = Math.max(2, Math.floor(dm.length*0.6));
+  const early = dm.slice(0,nEarly);
+  const sx=early.reduce((a,b)=>a+b.x,0), sy=early.reduce((a,b)=>a+b.y,0);
+  const sxx=early.reduce((a,b)=>a+b.x*b.x,0), sxy=early.reduce((a,b)=>a+b.x*b.y,0);
+  const n=early.length;
+  const slope=(n*sxy-sx*sy)/(n*sxx-sx*sx), intc=(sy-slope*sx)/n;
+  const proj = dm.map(d=>({x:d.x, y:slope*d.x+intc}));
+  const c2 = Plot.plot({
+    ...plotStyle, width:920, height:480, marginLeft:65, marginBottom:45, inset:10,
+    x:{label:'Lluvia acumulada vecinos (mm)', grid:true},
+    y:{label:'Lluvia acumulada Caburga (mm)', grid:true},
+    marks:[
+      Plot.line(proj, {x:'x', y:'y', stroke:COL.muted, strokeDasharray:'5,4', strokeWidth:1.5}),
+      Plot.line(dm, {x:'x', y:'y', stroke:COL.acc, strokeWidth:2}),
+      Plot.dot(dm, {x:'x', y:'y', fill:COL.acc, r:4}),
+      Plot.text(dm, {x:'x', y:'y', text:d=>String(d.año), dy:-10, fill:COL.muted, fontSize:9})
+    ]
+  });
+  document.getElementById('c2').append(c2);
+  document.getElementById('i2').innerHTML =
+    `La línea punteada gris es la tendencia esperada si Caburga siguiera comportándose como sus vecinos. Cuando los puntos azules se desvían por debajo, Caburga recibe (o retiene) menos agua de lo esperado — coherente con el efecto del desvío y su drenaje subterráneo. <em>Nota: serie corta por disponibilidad de datos de estación; se robustecerá con la serie DGA de nivel.</em>`;
+
+  // ---------- Chart 3: connected scatter animado ----------
+  const cn = D.connected;
+  const yearLabel=document.getElementById('yearLabel');
+  function drawScatter(upto){
+    document.getElementById('c3').innerHTML='';
+    const shown = cn.slice(0, upto);
+    const c3 = Plot.plot({
+      ...plotStyle, width:920, height:460, marginLeft:60, marginBottom:45, inset:14,
+      x:{label:'Precipitación (mm/año)', grid:true},
+      y:{label:'Nivel del lago (m)', grid:true},
+      marks:[
+        Plot.line(shown, {x:'precip', y:'nivel', stroke:COL.acc, strokeWidth:1.5, strokeOpacity:0.6, curve:'catmull-rom'}),
+        Plot.dot(shown, {x:'precip', y:'nivel', fill:d=>d.año>=2013?COL.bad:COL.acc, r:5}),
+        Plot.text(shown, {x:'precip', y:'nivel', text:d=>String(d.año), dy:-11, fill:COL.fg, fontSize:9})
+      ]
+    });
+    document.getElementById('c3').append(c3);
+    if(shown.length) yearLabel.textContent = `Mostrando hasta ${shown[shown.length-1].año}`;
+  }
+  drawScatter(cn.length);
+  document.getElementById('i3').innerHTML =
+    `Los puntos rojos (2013 en adelante) tienden a caer por debajo de la nube azul: con niveles de lluvia comparables, el lago queda más bajo. Es la firma de que algo además del clima opera tras 2013.`;
+  let playing=false, idx=0, timer=null;
+  document.getElementById('playBtn').onclick=function(){
+    if(playing){clearInterval(timer);playing=false;this.textContent='▶ Animar por año';return;}
+    playing=true;this.textContent='⏸ Pausar';idx=1;
+    timer=setInterval(()=>{drawScatter(idx);idx++;if(idx>cn.length){clearInterval(timer);playing=false;document.getElementById('playBtn').textContent='▶ Animar por año';}},700);
+  };
+});
+</script>
+</body>
+</html>

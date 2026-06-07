@@ -1,0 +1,35 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"tipo": "lago", "nombre": "Lago Caburga", "info": "53 km², 327 m de profundidad. Drena bajo tierra por los Ojos del Caburga."},
+      "geometry": {"type": "Point", "coordinates": [-71.81, -39.20]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"tipo": "ojos", "nombre": "Ojos del Caburga", "info": "Salida subterránea natural del lago. Único drenaje de este tipo en Chile."},
+      "geometry": {"type": "Point", "coordinates": [-71.8356, -39.2367]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"tipo": "lago", "nombre": "Lago Colico", "info": "Recibe el 100% del Trafampulli desde 2007/2009."},
+      "geometry": {"type": "Point", "coordinates": [-71.95, -39.10]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"tipo": "lago", "nombre": "Lago Villarrica", "info": "Lago vecino, usado como referencia regional. Bajó mucho menos que Caburga."},
+      "geometry": {"type": "Point", "coordinates": [-72.07, -39.27]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"tipo": "dique", "nombre": "Dique Trafampulli / Estero La Cascada", "info": "Construido 2007 (Of. DGA 347, sin EIA). Destruido por comunidad mapuche en may-2022. Corte Suprema autoriza reconstrucción ago-2025."},
+      "geometry": {"type": "Point", "coordinates": [-71.7833, -39.0667]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"tipo": "rio", "nombre": "Río Blanco", "info": "Principal afluente del Caburga: 180 km² (54% de la cuenca)."},
+      "geometry": {"type": "Point", "coordinates": [-71.78, -39.10]}
+    }
+  ]
+}

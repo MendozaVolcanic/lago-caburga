@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<title>Lago Caburga · Mapa 3D del terreno</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Mapa 3D interactivo de la cuenca del Lago Caburga: el valle glacial, el dique del Trafampulli, los Ojos del Caburga.">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+:root{--bg:#0e1a24;--fg:#e8eef5;--muted:#7c8fa1;--acc:#4aa3df;--bad:#c0392b;--ok:#27ae60;--warn:#e6a23c;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--fg);}
+#map{position:absolute;top:0;bottom:0;left:0;right:0;}
+.panel{position:absolute;top:16px;left:16px;z-index:10;background:rgba(14,26,36,.92);
+  border:1px solid #1f3245;border-radius:12px;padding:18px 20px;max-width:330px;backdrop-filter:blur(6px);}
+.panel h1{margin:0 0 6px;font-size:1.25rem;}
+.panel p{margin:0 0 14px;color:var(--muted);font-size:.86rem;line-height:1.5;}
+.panel .back{color:var(--acc);text-decoration:none;font-size:.85rem;}
+.controls{position:absolute;top:16px;right:16px;z-index:10;background:rgba(14,26,36,.92);
+  border:1px solid #1f3245;border-radius:12px;padding:14px;backdrop-filter:blur(6px);}
+.controls label{display:flex;align-items:center;gap:8px;font-size:.84rem;margin:6px 0;cursor:pointer;}
+.controls .sec{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:10px 0 4px;}
+.controls input[type=range]{width:130px;}
+.legend{position:absolute;bottom:16px;left:16px;z-index:10;background:rgba(14,26,36,.92);
+  border:1px solid #1f3245;border-radius:12px;padding:14px 18px;font-size:.82rem;backdrop-filter:blur(6px);}
+.legend .row{display:flex;align-items:center;gap:8px;margin:5px 0;}
+.legend .dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;}
+.legend .line{width:22px;height:3px;flex-shrink:0;}
+.tour{position:absolute;bottom:16px;right:16px;z-index:10;display:flex;gap:8px;flex-wrap:wrap;max-width:340px;justify-content:flex-end;}
+.tour button{background:rgba(14,26,36,.92);color:var(--fg);border:1px solid #1f3245;border-radius:8px;
+  padding:8px 12px;font-size:.8rem;cursor:pointer;transition:all .2s;}
+.tour button:hover{background:var(--acc);border-color:var(--acc);}
+.maplibregl-popup-content{background:#142434;color:var(--fg);border-radius:8px;padding:14px 16px;font-size:.85rem;max-width:240px;}
+.maplibregl-popup-content strong{color:var(--acc);}
+.maplibregl-popup-tip{border-top-color:#142434!important;border-bottom-color:#142434!important;}
+@media(max-width:600px){.panel{max-width:calc(100% - 32px);}.controls{display:none;}}
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div class="panel">
+  <h1>🏔 Cuenca del Lago Caburga en 3D</h1>
+  <p>Explora el terreno real: el valle glacial, los volcanes que taparon el desagüe, el dique del Trafampulli y los Ojos del Caburga. Arrastra para rotar, rueda para zoom.</p>
+  <a class="back" href="index.html">← Volver al estudio</a>
+</div>
+
+<div class="controls">
+  <div class="sec">Capas</div>
+  <label><input type="checkbox" id="satToggle"> Imagen satelital</label>
+  <label><input type="checkbox" id="hsToggle" checked> Relieve sombreado</label>
+  <label><input type="checkbox" id="cuencaToggle" checked> Cuenca aportante</label>
+  <label><input type="checkbox" id="flujoToggle" checked> Ríos y flujo</label>
+  <div class="sec">Exageración del relieve</div>
+  <input type="range" id="exag" min="1" max="3" step="0.25" value="1.6">
+</div>
+
+<div class="legend">
+  <div class="row"><span class="dot" style="background:#4aa3df;"></span> Lagos</div>
+  <div class="row"><span class="dot" style="background:#9b59b6;"></span> Ojos del Caburga (drenaje)</div>
+  <div class="row"><span class="dot" style="background:#c0392b;"></span> Dique Trafampulli</div>
+  <div class="row"><span class="line" style="background:#4aa3df;"></span> Brazo histórico → Caburga</div>
+  <div class="row"><span class="line" style="background:#e6a23c;"></span> Trafampulli → Colico (activo)</div>
+</div>
+
+<div class="tour">
+  <button data-view="general">Vista general</button>
+  <button data-view="dique">El dique</button>
+  <button data-view="ojos">Ojos del Caburga</button>
+  <button data-view="valle">Valle glacial</button>
+</div>
+
+<script>
+const CENTER = [-71.86, -39.16];
+
+const map = new maplibregl.Map({
+  container: 'map',
+  style: {
+    version: 8,
+    glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+    sources: {
+      dem: {
+        type: 'raster-dem',
+        tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+        encoding: 'terrarium', tileSize: 256, maxzoom: 14,
+        attribution: 'Tiles: Mapzen/AWS Terrarium'
+      },
+      sat: {
+        type: 'raster',
+        tiles: ['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg'],
+        tileSize: 256, maxzoom: 14,
+        attribution: 'Sentinel-2 cloudless 2020 — EOX (modified Copernicus data)'
+      },
+      osm: {
+        type: 'raster',
+        tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'],
+        tileSize: 256, attribution: '© OpenStreetMap'
+      }
+    },
+    layers: [
+      { id: 'osm', type: 'raster', source: 'osm', paint: { 'raster-opacity': 0.55 } },
+      { id: 'sat', type: 'raster', source: 'sat', layout: { visibility: 'none' } },
+      { id: 'hs', type: 'hillshade', source: 'dem',
+        paint: { 'hillshade-exaggeration': 0.6, 'hillshade-shadow-color': '#0a1018' } }
+    ]
+  },
+  center: CENTER, zoom: 10.5, pitch: 62, bearing: -18, maxPitch: 80
+});
+
+map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
+
+map.on('load', () => {
+  map.setTerrain({ source: 'dem', exaggeration: 1.6 });
+
+  // Cuenca aportante aproximada (caja; se reemplazará por delineación pysheds)
+  map.addSource('cuenca', {
+    type: 'geojson',
+    data: { type:'Feature', geometry:{ type:'Polygon', coordinates:[[
+      [-71.98,-39.30],[-71.55,-39.30],[-71.55,-38.95],[-71.98,-38.95],[-71.98,-39.30]
+    ]]}}
+  });
+  map.addLayer({ id:'cuenca-fill', type:'fill', source:'cuenca',
+    paint:{ 'fill-color':'#4aa3df', 'fill-opacity':0.06 } });
+  map.addLayer({ id:'cuenca-line', type:'line', source:'cuenca',
+    paint:{ 'line-color':'#4aa3df', 'line-width':1.5, 'line-dasharray':[3,2], 'line-opacity':0.5 } });
+
+  // Brazo histórico Trafampulli -> Caburga (azul)
+  map.addSource('brazo-caburga', { type:'geojson', data:{ type:'Feature', geometry:{
+    type:'LineString', coordinates:[[-71.7833,-39.0667],[-71.79,-39.10],[-71.80,-39.13],[-71.805,-39.155]]}}});
+  map.addLayer({ id:'brazo-caburga', type:'line', source:'brazo-caburga',
+    paint:{ 'line-color':'#4aa3df', 'line-width':4, 'line-dasharray':[1,1.5] } });
+
+  // Trafampulli -> Colico (ámbar, activo)
+  map.addSource('trafampulli-colico', { type:'geojson', data:{ type:'Feature', geometry:{
+    type:'LineString', coordinates:[[-71.65,-39.04],[-71.7833,-39.0667],[-71.85,-39.08],[-71.92,-39.095],[-71.95,-39.10]]}}});
+  map.addLayer({ id:'trafampulli-colico', type:'line', source:'trafampulli-colico',
+    paint:{ 'line-color':'#e6a23c', 'line-width':4 } });
+
+  // Río Blanco -> Caburga
+  map.addSource('rio-blanco', { type:'geojson', data:{ type:'Feature', geometry:{
+    type:'LineString', coordinates:[[-71.74,-39.07],[-71.78,-39.10],[-71.80,-39.14],[-71.808,-39.165]]}}});
+  map.addLayer({ id:'rio-blanco', type:'line', source:'rio-blanco',
+    paint:{ 'line-color':'#5fb0e8', 'line-width':3 } });
+
+  // Flujo subterráneo Caburga -> Ojos (punteado tenue)
+  map.addSource('subterraneo', { type:'geojson', data:{ type:'Feature', geometry:{
+    type:'LineString', coordinates:[[-71.81,-39.22],[-71.825,-39.23],[-71.8356,-39.2367]]}}});
+  map.addLayer({ id:'subterraneo', type:'line', source:'subterraneo',
+    paint:{ 'line-color':'#9b59b6', 'line-width':3, 'line-dasharray':[2,2], 'line-opacity':0.7 } });
+
+  // Puntos de interés
+  fetch('data/geografia.geojson').then(r=>r.json()).then(gj=>{
+    map.addSource('poi', { type:'geojson', data: gj });
+    map.addLayer({ id:'poi', type:'circle', source:'poi',
+      paint:{
+        'circle-radius': 8,
+        'circle-color': ['match', ['get','tipo'],
+          'lago','#4aa3df', 'ojos','#9b59b6', 'dique','#c0392b', 'rio','#5fb0e8', '#888'],
+        'circle-stroke-width': 2, 'circle-stroke-color': '#e8eef5'
+      }});
+    map.on('click','poi', e=>{
+      const p = e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat)
+        .setHTML(`<strong>${p.nombre}</strong><br>${p.info}`).addTo(map);
+    });
+    map.on('mouseenter','poi',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','poi',()=>map.getCanvas().style.cursor='');
+  });
+});
+
+// Controles
+document.getElementById('satToggle').onchange = e => {
+  map.setLayoutProperty('sat','visibility', e.target.checked?'visible':'none');
+  map.setPaintProperty('osm','raster-opacity', e.target.checked?0:0.55);
+};
+document.getElementById('hsToggle').onchange = e =>
+  map.setLayoutProperty('hs','visibility', e.target.checked?'visible':'none');
+document.getElementById('cuencaToggle').onchange = e => {
+  const v = e.target.checked?'visible':'none';
+  ['cuenca-fill','cuenca-line'].forEach(l=>map.setLayoutProperty(l,'visibility',v));
+};
+document.getElementById('flujoToggle').onchange = e => {
+  const v = e.target.checked?'visible':'none';
+  ['brazo-caburga','trafampulli-colico','rio-blanco','subterraneo'].forEach(l=>{
+    if(map.getLayer(l)) map.setLayoutProperty(l,'visibility',v);
+  });
+};
+document.getElementById('exag').oninput = e =>
+  map.setTerrain({ source:'dem', exaggeration: parseFloat(e.target.value) });
+
+// Tour de cámara
+const vistas = {
+  general: { center:[-71.86,-39.16], zoom:10.5, pitch:62, bearing:-18 },
+  dique:   { center:[-71.7833,-39.0667], zoom:13, pitch:70, bearing:30 },
+  ojos:    { center:[-71.8356,-39.2367], zoom:13.5, pitch:72, bearing:-40 },
+  valle:   { center:[-71.81,-39.20], zoom:12, pitch:74, bearing:10 }
+};
+document.querySelectorAll('.tour button').forEach(b=>{
+  b.onclick = () => map.flyTo({ ...vistas[b.dataset.view], duration: 2500, essential:true });
+});
+</script>
+</body>
+</html>
