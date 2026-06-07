@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<title>Lago Caburga · Comparador satelital</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Compara imágenes satelitales del Lago Caburga en distintos años y observa el retroceso del espejo de agua.">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/@maplibre/maplibre-gl-compare@0.6.0/dist/maplibre-gl-compare.js"></script>
+<link href="https://unpkg.com/@maplibre/maplibre-gl-compare@0.6.0/dist/maplibre-gl-compare.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1a24;--ink:#e8eef3;--muted:#8fa3b0;--acc:#4aa3df;
+  --serif:'Newsreader',serif;--sans:'Inter',sans-serif;--mono:'IBM Plex Mono',monospace;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);}
+#comparison{position:absolute;top:0;bottom:0;width:100%;}
+.before,.after{position:absolute;top:0;bottom:0;width:100%;}
+.panel{position:absolute;top:16px;left:16px;z-index:10;background:rgba(14,26,36,.92);
+  border:1px solid #1f3245;border-radius:12px;padding:18px 20px;max-width:340px;backdrop-filter:blur(6px);}
+.panel h1{font-family:var(--serif);margin:0 0 6px;font-size:1.3rem;}
+.panel p{margin:0 0 12px;color:var(--muted);font-size:.86rem;line-height:1.5;}
+.panel a{color:var(--acc);text-decoration:none;font-size:.85rem;}
+.yearLabels{position:absolute;top:16px;width:100%;z-index:9;display:flex;justify-content:space-between;
+  padding:0 20px;pointer-events:none;}
+.yearLabels span{background:rgba(14,26,36,.85);font-family:var(--mono);font-size:1.1rem;font-weight:500;
+  padding:6px 14px;border-radius:8px;border:1px solid #1f3245;}
+.controls{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:10;
+  background:rgba(14,26,36,.92);border:1px solid #1f3245;border-radius:12px;padding:14px 20px;
+  backdrop-filter:blur(6px);display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center;}
+.controls label{font-size:.82rem;color:var(--muted);}
+.controls select{background:#142434;color:var(--ink);border:1px solid #1f3245;border-radius:6px;
+  padding:6px 10px;font-family:var(--mono);font-size:.85rem;}
+.note{position:absolute;bottom:6px;right:8px;z-index:10;font-family:var(--mono);font-size:.62rem;
+  color:rgba(143,163,176,.6);}
+@media(max-width:600px){.panel{max-width:calc(100% - 32px);}}
+</style>
+</head>
+<body>
+
+<div id="comparison">
+  <div id="before" class="before"></div>
+  <div id="after" class="after"></div>
+</div>
+
+<div class="yearLabels"><span id="lblBefore">2021 · sequía extrema</span><span id="lblAfter">2024 · recuperación</span></div>
+
+<div class="panel">
+  <h1>🛰 Comparador satelital</h1>
+  <p>Arrastra el control central para comparar el lago en dos años. Las imágenes son mosaicos Sentinel-2 sin nubes (EOX). Observa el espejo de agua y la línea de costa.</p>
+  <a href="index.html">← Volver al estudio</a>
+</div>
+
+<div class="controls">
+  <label>Izquierda: <select id="selBefore">
+    <option value="2018">2018</option>
+    <option value="2020">2020</option>
+    <option value="2021" selected>2021 (sequía extrema)</option>
+    <option value="2022">2022</option>
+    <option value="2024">2024 (recuperación)</option>
+  </select></label>
+  <label>Derecha: <select id="selAfter">
+    <option value="2018">2018</option>
+    <option value="2020">2020</option>
+    <option value="2021">2021 (sequía extrema)</option>
+    <option value="2022">2022</option>
+    <option value="2024" selected>2024 (recuperación)</option>
+  </select></label>
+</div>
+<div class="note">Sentinel-2 cloudless — s2maps.eu by EOX (modified Copernicus data)</div>
+
+<script>
+const CENTER=[-71.81,-39.20], ZOOM=12.2;
+function s2url(year){
+  return `https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-${year}_3857/default/g/{z}/{y}/{x}.jpg`;
+}
+function makeMap(container, year){
+  return new maplibregl.Map({
+    container, center:CENTER, zoom:ZOOM, attributionControl:false,
+    style:{version:8,sources:{
+      s2:{type:'raster',tiles:[s2url(year)],tileSize:256,maxzoom:14}
+    },layers:[{id:'s2',type:'raster',source:'s2'}]}
+  });
+}
+let before=makeMap('before','2021');
+let after=makeMap('after','2024');
+let compare=new maplibregl.Compare(before, after, '#comparison');
+
+function rebuild(){
+  const yB=document.getElementById('selBefore').value;
+  const yA=document.getElementById('selAfter').value;
+  const tag=y=>y==='2021'?' · sequía extrema':(y==='2024'?' · recuperación':'');
+  document.getElementById('lblBefore').textContent = yB + tag(yB);
+  document.getElementById('lblAfter').textContent = yA + tag(yA);
+  before.getSource('s2').setTiles([s2url(yB)]);
+  after.getSource('s2').setTiles([s2url(yA)]);
+}
+document.getElementById('selBefore').onchange=rebuild;
+document.getElementById('selAfter').onchange=rebuild;
+</script>
+</body>
+</html>

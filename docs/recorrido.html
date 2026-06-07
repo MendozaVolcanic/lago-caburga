@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<title>Lago Caburga · Recorrido por el terreno</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Un recorrido scrollytelling en 3D por la cuenca del Lago Caburga: el valle, el dique, los Ojos y la historia del agua.">
+<meta property="og:title" content="Lago Caburga · Recorrido por el terreno en 3D">
+<meta property="og:image" content="https://mendozavolcanic.github.io/lago-caburga/assets/antes_despues_lago.jpg">
+
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/scrollama@3.2.0/build/scrollama.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0e1a24; --ink:#e8eef3; --muted:#8fa3b0; --acc:#4aa3df;
+  --bad:#c0392b; --ok:#27ae60; --warn:#e6a23c;
+  --serif:'Newsreader',Georgia,serif; --sans:'Inter',system-ui,sans-serif; --mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);}
+
+/* Mapa sticky de fondo */
+#map{position:fixed;top:0;left:0;width:100%;height:100vh;z-index:1;}
+#map-overlay{position:fixed;top:0;left:0;width:100%;height:100vh;z-index:2;pointer-events:none;
+  background:radial-gradient(ellipse at 70% 50%, transparent 30%, rgba(14,26,36,.45) 100%);}
+
+/* Intro hero */
+.intro{position:relative;z-index:3;height:100vh;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;text-align:center;padding:0 24px;pointer-events:none;}
+.intro .kicker{font-family:var(--mono);color:var(--acc);font-size:.8rem;letter-spacing:.2em;
+  text-transform:uppercase;margin-bottom:18px;}
+.intro h1{font-family:var(--serif);font-weight:700;font-size:clamp(2.6rem,7vw,5.5rem);
+  margin:0 0 18px;line-height:1.05;text-shadow:0 4px 40px rgba(0,0,0,.8);max-width:16ch;}
+.intro p{font-size:clamp(1.05rem,2vw,1.4rem);color:#cdd6df;max-width:640px;text-shadow:0 2px 20px rgba(0,0,0,.8);}
+.intro .hint{font-family:var(--mono);position:absolute;bottom:30px;color:var(--muted);font-size:.8rem;
+  animation:bounce 2s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+
+/* Pasos scrollytelling */
+.steps{position:relative;z-index:3;}
+.step{min-height:95vh;display:flex;align-items:center;
+  padding:0 24px;}
+.step .card{background:rgba(14,26,36,.92);border:1px solid #1f3245;border-radius:14px;
+  padding:30px 32px;max-width:440px;backdrop-filter:blur(8px);pointer-events:auto;
+  box-shadow:0 18px 50px rgba(0,0,0,.5);}
+.step.right .card{margin-left:auto;}
+.step .n{font-family:var(--mono);color:var(--acc);font-size:.78rem;letter-spacing:.12em;
+  text-transform:uppercase;margin-bottom:12px;}
+.step h2{font-family:var(--serif);font-weight:600;font-size:1.7rem;margin:0 0 14px;line-height:1.15;}
+.step p{color:#c9d4dd;font-size:1.02rem;line-height:1.65;margin:0 0 12px;}
+.step .stat{font-family:var(--serif);font-weight:700;font-size:2.6rem;color:var(--acc);
+  line-height:1;margin:14px 0 6px;}
+.step .stat-l{color:var(--muted);font-size:.86rem;}
+.step .coord{font-family:var(--mono);color:var(--muted);font-size:.76rem;margin-top:14px;}
+
+/* Outro */
+.outro{position:relative;z-index:3;background:var(--bg);padding:90px 24px 70px;text-align:center;
+  border-top:1px solid #1f3245;}
+.outro h2{font-family:var(--serif);font-size:2rem;margin:0 0 14px;}
+.outro p{color:var(--muted);max-width:600px;margin:0 auto 26px;}
+.outro .links{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+.outro .links a{font-family:var(--sans);padding:11px 22px;background:rgba(74,163,223,.14);
+  border:1px solid var(--acc);color:var(--ink);border-radius:8px;text-decoration:none;font-size:.92rem;
+  transition:all .2s;}
+.outro .links a:hover{background:var(--acc);}
+.credit{position:fixed;bottom:6px;left:8px;z-index:4;font-family:var(--mono);font-size:.62rem;
+  color:rgba(143,163,176,.6);pointer-events:none;}
+@media(max-width:600px){.step .card{max-width:100%;}.step.right .card{margin-left:0;}}
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+<div id="map-overlay"></div>
+<div class="credit">Relieve: AWS Terrarium · Satélite: Sentinel-2 cloudless / EOX</div>
+
+<section class="intro">
+  <div class="kicker">Recorrido en 3D · 39°S</div>
+  <h1>Sobrevolando el lago que se vacía</h1>
+  <p>Un recorrido por el terreno real de la cuenca del Lago Caburga. Desplázate para volar sobre el valle, el dique y los Ojos.</p>
+  <div class="hint">↓ desplázate para comenzar</div>
+</section>
+
+<div class="steps" id="steps">
+  <div class="step" data-chapter="valle">
+    <div class="card">
+      <div class="n">01 · El valle glacial</div>
+      <h2>Un lago atrapado por la lava</h2>
+      <p>Hace miles de años, un glaciar excavó este valle. Después, la lava de los volcanes Caburgua-Huelemolle tapó la salida y embalsó el agua. Así nació el lago.</p>
+      <div class="coord">39.20°S · 71.81°O · 470 m s.n.m.</div>
+    </div>
+  </div>
+
+  <div class="step right" data-chapter="ojos">
+    <div class="card">
+      <div class="n">02 · Los Ojos del Caburga</div>
+      <h2>Drena hacia adentro de la tierra</h2>
+      <p>A diferencia de todos los lagos de la región, el Caburga no tiene un río de salida en superficie. El agua se filtra por la roca volcánica y reaparece 5 km al sur, en los Ojos del Caburga.</p>
+      <p>Por eso es tan frágil: como una bañera con el tapón al fondo.</p>
+      <div class="coord">39.24°S · 71.84°O</div>
+    </div>
+  </div>
+
+  <div class="step" data-chapter="rioblanco">
+    <div class="card">
+      <div class="n">03 · El Río Blanco</div>
+      <h2>El afluente principal</h2>
+      <p>El Río Blanco baja desde el norte y aporta más de la mitad del agua que entra al lago: una cuenca de 180 km².</p>
+      <div class="stat">54%</div>
+      <div class="stat-l">de la cuenca aportante</div>
+    </div>
+  </div>
+
+  <div class="step right" data-chapter="dique">
+    <div class="card">
+      <div class="n">04 · El dique del Trafampulli</div>
+      <h2>Aquí se cortó el agua</h2>
+      <p>En 2007, por orden de la DGA, se construyó aquí un dique que cerró el brazo del río Trafampulli que alimentaba al Caburga. Todo su caudal se desvió al Lago Colico.</p>
+      <p>En mayo de 2022, la comunidad mapuche lo derribó. En 2025, la Corte Suprema autorizó reconstruirlo.</p>
+      <div class="coord">39.07°S · 71.78°O</div>
+    </div>
+  </div>
+
+  <div class="step" data-chapter="bifurcacion">
+    <div class="card">
+      <div class="n">05 · La bifurcación</div>
+      <h2>Un río, dos destinos</h2>
+      <p>Durante miles de años el Trafampulli se dividía en dos brazos: uno al Caburga (azul), otro al Colico (ámbar). El dique dejó solo el del Colico.</p>
+      <p>Cuánta agua llevaba el brazo al Caburga es el corazón de la disputa: entre 0,3 y 2 m³/s según el estudio.</p>
+    </div>
+  </div>
+
+  <div class="step right" data-chapter="cuenca">
+    <div class="card">
+      <div class="n">06 · La cuenca completa</div>
+      <h2>Todo conectado</h2>
+      <p>Esta es la cuenca aportante real, delineada desde un modelo de elevación satelital. 335 km² de montañas cuya lluvia y nieve alimentan el lago.</p>
+      <p>Cuando la lluvia cae un tercio y la nieve a la mitad, todo el sistema lo siente.</p>
+      <div class="stat">335 km²</div>
+      <div class="stat-l">cuenca aportante</div>
+    </div>
+  </div>
+</div>
+
+<section class="outro">
+  <h2>¿Y ahora qué?</h2>
+  <p>Viste el terreno. Ahora explora los datos y la evidencia que explican por qué el lago se vacía — y cómo otros lugares del mundo resolvieron el mismo conflicto.</p>
+  <div class="links">
+    <a href="story.html">📖 El estudio completo</a>
+    <a href="explorador.html">📊 Explorador de datos</a>
+    <a href="terrain.html">🏔 Mapa 3D libre</a>
+    <a href="index.html">Inicio</a>
+  </div>
+</section>
+
+<script>
+const map = new maplibregl.Map({
+  container:'map',
+  style:{
+    version:8,
+    glyphs:'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+    sources:{
+      dem:{type:'raster-dem',tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+        encoding:'terrarium',tileSize:256,maxzoom:14},
+      sat:{type:'raster',tiles:['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg'],
+        tileSize:256,maxzoom:14,attribution:'Sentinel-2 cloudless — EOX'}
+    },
+    layers:[
+      {id:'sat',type:'raster',source:'sat'},
+      {id:'hs',type:'hillshade',source:'dem',paint:{'hillshade-exaggeration':0.5}}
+    ]
+  },
+  center:[-71.81,-39.20],zoom:11,pitch:55,bearing:0,
+  interactive:true, maxPitch:80, attributionControl:false
+});
+map.addControl(new maplibregl.AttributionControl({compact:true}));
+
+const chapters = {
+  valle:       {center:[-71.81,-39.20],zoom:11.2,pitch:60,bearing:10,duration:2500},
+  ojos:        {center:[-71.8356,-39.2367],zoom:13.2,pitch:72,bearing:-35,duration:2500},
+  rioblanco:   {center:[-71.79,-39.11],zoom:12.2,pitch:66,bearing:-10,duration:2500},
+  dique:       {center:[-71.7833,-39.0667],zoom:13.2,pitch:70,bearing:40,duration:2500},
+  bifurcacion: {center:[-71.80,-39.07],zoom:12.5,pitch:68,bearing:20,duration:2500},
+  cuenca:      {center:[-71.80,-39.12],zoom:10.3,pitch:50,bearing:0,duration:2800}
+};
+
+map.on('load', () => {
+  map.setTerrain({source:'dem',exaggeration:1.6});
+
+  // Brazo histórico -> Caburga (azul, ant-path)
+  map.addSource('brazo',{type:'geojson',lineMetrics:true,data:{type:'Feature',geometry:{
+    type:'LineString',coordinates:[[-71.7833,-39.0667],[-71.79,-39.10],[-71.80,-39.13],[-71.805,-39.155]]}}});
+  map.addLayer({id:'brazo',type:'line',source:'brazo',
+    paint:{'line-color':'#4aa3df','line-width':4}});
+
+  // Trafampulli -> Colico (ámbar)
+  map.addSource('colico',{type:'geojson',lineMetrics:true,data:{type:'Feature',geometry:{
+    type:'LineString',coordinates:[[-71.65,-39.04],[-71.7833,-39.0667],[-71.85,-39.08],[-71.92,-39.095],[-71.95,-39.10]]}}});
+  map.addLayer({id:'colico',type:'line',source:'colico',
+    paint:{'line-color':'#e6a23c','line-width':4}});
+
+  // Flujo subterráneo -> Ojos (morado punteado)
+  map.addSource('sub',{type:'geojson',data:{type:'Feature',geometry:{
+    type:'LineString',coordinates:[[-71.81,-39.22],[-71.825,-39.23],[-71.8356,-39.2367]]}}});
+  map.addLayer({id:'sub',type:'line',source:'sub',
+    paint:{'line-color':'#9b59b6','line-width':3,'line-dasharray':[2,2],'line-opacity':0.8}});
+
+  // Cuenca real (si existe el GeoJSON de pysheds; si no, caja)
+  fetch('data/cuenca_caburga.geojson').then(r=>r.ok?r.json():null).then(gj=>{
+    const data = gj || {type:'Feature',geometry:{type:'Polygon',coordinates:[[
+      [-71.98,-39.30],[-71.55,-39.30],[-71.55,-38.95],[-71.98,-38.95],[-71.98,-39.30]]]}};
+    map.addSource('cuenca',{type:'geojson',data});
+    map.addLayer({id:'cuenca-fill',type:'fill',source:'cuenca',
+      paint:{'fill-color':'#4aa3df','fill-opacity':0},
+      layout:{visibility:'visible'}},'brazo');
+    map.addLayer({id:'cuenca-line',type:'line',source:'cuenca',
+      paint:{'line-color':'#4aa3df','line-width':2,'line-opacity':0,'line-dasharray':[2,1]}});
+  }).catch(()=>{});
+
+  // Marcadores
+  const pts=[
+    {c:[-71.8356,-39.2367],col:'#9b59b6',t:'Ojos del Caburga'},
+    {c:[-71.7833,-39.0667],col:'#c0392b',t:'Dique Trafampulli'}
+  ];
+  pts.forEach(p=>{
+    const el=document.createElement('div');
+    el.style.cssText=`width:14px;height:14px;border-radius:50%;background:${p.col};border:2px solid #fff;box-shadow:0 0 8px ${p.col};`;
+    new maplibregl.Marker({element:el}).setLngLat(p.c)
+      .setPopup(new maplibregl.Popup({offset:14}).setText(p.t)).addTo(map);
+  });
+
+  // Ant-path animado en los ríos
+  let step=0;
+  const dashSeq=[[0,4,3],[0.5,4,2.5],[1,4,2],[1.5,4,1.5],[2,4,1],[2.5,4,0.5],
+                 [3,4,0],[0,0.5,4,3.5],[0,1,4,3],[0,1.5,4,2.5],[0,2,4,2],
+                 [0,2.5,4,1.5],[0,3,4,1],[0,3.5,4,0.5]];
+  function animate(){
+    step=(step+1)%dashSeq.length;
+    if(map.getLayer('brazo')) map.setPaintProperty('brazo','line-dasharray',dashSeq[step]);
+    if(map.getLayer('colico')) map.setPaintProperty('colico','line-dasharray',dashSeq[step]);
+    setTimeout(()=>requestAnimationFrame(animate),90);
+  }
+  animate();
+
+  // Scrollama
+  const scroller=scrollama();
+  scroller.setup({step:'.step',offset:0.6}).onStepEnter(({element})=>{
+    const ch=chapters[element.dataset.chapter];
+    if(ch) map.easeTo({...ch,essential:true});
+    // resaltar cuenca en el último paso
+    const showCuenca = element.dataset.chapter==='cuenca';
+    if(map.getLayer('cuenca-fill')){
+      map.setPaintProperty('cuenca-fill','fill-opacity',showCuenca?0.12:0);
+      map.setPaintProperty('cuenca-line','line-opacity',showCuenca?0.7:0);
+    }
+  });
+  addEventListener('resize',scroller.resize);
+});
+</script>
+</body>
+</html>
