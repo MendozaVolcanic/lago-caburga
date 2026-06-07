@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<title>Lago Caburga · El nivel del agua en 3D</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Animación 3D del descenso del nivel del Lago Caburga año a año, sobre el terreno real.">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1a24;--ink:#e8eef3;--muted:#8fa3b0;--acc:#4aa3df;--bad:#c0392b;--ok:#27ae60;
+  --serif:'Newsreader',serif;--sans:'Inter',sans-serif;--mono:'IBM Plex Mono',monospace;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);}
+#map{position:absolute;inset:0;}
+.panel{position:absolute;top:16px;left:16px;z-index:10;background:rgba(14,26,36,.92);
+  border:1px solid #1f3245;border-radius:12px;padding:18px 20px;max-width:320px;backdrop-filter:blur(6px);}
+.panel h1{font-family:var(--serif);margin:0 0 6px;font-size:1.2rem;}
+.panel p{margin:0 0 10px;color:var(--muted);font-size:.84rem;line-height:1.5;}
+.panel a{color:var(--acc);text-decoration:none;font-size:.84rem;}
+.hud{position:absolute;top:16px;right:16px;z-index:10;background:rgba(14,26,36,.92);
+  border:1px solid #1f3245;border-radius:12px;padding:18px 22px;backdrop-filter:blur(6px);text-align:right;min-width:180px;}
+.hud .year{font-family:var(--mono);font-size:3rem;font-weight:500;color:var(--acc);line-height:1;}
+.hud .row{margin-top:10px;font-size:.86rem;color:var(--muted);}
+.hud .row b{color:var(--ink);font-family:var(--mono);}
+.hud .phase{margin-top:10px;font-size:.78rem;padding:3px 10px;border-radius:20px;display:inline-block;}
+.controls{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:10;
+  background:rgba(14,26,36,.94);border:1px solid #1f3245;border-radius:12px;padding:14px 22px;
+  backdrop-filter:blur(6px);display:flex;gap:16px;align-items:center;width:min(640px,90vw);}
+.controls button{background:var(--acc);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;font-size:.9rem;font-weight:600;}
+.controls input[type=range]{flex:1;}
+.note{position:absolute;bottom:4px;right:8px;z-index:10;font-family:var(--mono);font-size:.6rem;color:rgba(143,163,176,.6);}
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div class="panel">
+  <h1>💧 El nivel del agua, año a año</h1>
+  <p>El bloque azul representa el volumen de agua del lago sobre el terreno real. Dale play para ver cómo desciende con la sequía y se recupera con El Niño.</p>
+  <p><em>Nivel ilustrativo (proxy U. Austral + Open-Meteo), exagerado para visualización.</em></p>
+  <a href="index.html">← Volver al estudio</a>
+</div>
+
+<div class="hud">
+  <div class="year" id="year">2000</div>
+  <div class="row">Nivel: <b id="nivel">9.6</b> m</div>
+  <div class="row">Lluvia: <b id="lluvia">—</b> mm</div>
+  <div class="phase" id="phase"></div>
+</div>
+
+<div class="controls">
+  <button id="play">▶ Play</button>
+  <input type="range" id="scrub" min="0" max="0" value="0" step="1">
+</div>
+<div class="note">Relieve: AWS Terrarium · Lago: DEM COP-30</div>
+
+<script>
+const map=new maplibregl.Map({
+  container:'map',
+  style:{version:8,glyphs:'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+    sources:{
+      dem:{type:'raster-dem',tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],encoding:'terrarium',tileSize:256,maxzoom:14},
+      sat:{type:'raster',tiles:['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg'],tileSize:256,maxzoom:14,attribution:'Sentinel-2 cloudless — EOX'}
+    },
+    layers:[{id:'sat',type:'raster',source:'sat'},
+            {id:'hs',type:'hillshade',source:'dem',paint:{'hillshade-exaggeration':0.5}}]},
+  center:[-71.808,-39.19],zoom:11.6,pitch:68,bearing:25,maxPitch:82
+});
+map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'bottom-right');
+
+// Serie de nivel (proxy) + lluvia (Open-Meteo). Niveles relativos en metros.
+const serie=[
+ {y:2000,h:9.6},{y:2001,h:9.4},{y:2002,h:9.8},{y:2003,h:8.9},{y:2004,h:9.0},
+ {y:2005,h:9.3},{y:2006,h:9.7},{y:2007,h:8.7},{y:2008,h:8.2},{y:2009,h:9.1},
+ {y:2010,h:8.0},{y:2011,h:7.6},{y:2012,h:7.0},{y:2013,h:6.8},{y:2014,h:7.2},
+ {y:2015,h:7.0},{y:2016,h:5.6},{y:2017,h:6.4},{y:2018,h:6.6},{y:2019,h:5.9},
+ {y:2020,h:5.4},{y:2021,h:4.8},{y:2022,h:6.7},{y:2023,h:8.1},{y:2024,h:8.6},{y:2025,h:6.2}
+];
+const phases={2007:['Dique','#c0392b'],2010:['Megasequía','#e6a23c'],
+  2022:['Cae el dique','#27ae60'],2023:['El Niño','#4aa3df'],2025:['La Niña','#c0392b']};
+const EXAG=18;            // exageración vertical del bloque de agua
+const BASE_EXTRUDE=200;   // altura base sobre el terreno (m) para que flote visible
+
+map.on('load',()=>{
+  map.setTerrain({source:'dem',exaggeration:1.5});
+  fetch('data/lago_poligono.geojson').then(r=>r.json()).then(gj=>{
+    map.addSource('lago',{type:'geojson',data:gj});
+    map.addLayer({id:'agua',type:'fill-extrusion',source:'lago',
+      paint:{
+        'fill-extrusion-color':['interpolate',['linear'],['get','h'],
+          5,'#7a3b2e', 7,'#2f6f8f', 10,'#1f6feb'],
+        'fill-extrusion-opacity':0.78,
+        'fill-extrusion-base':0,
+        'fill-extrusion-height':['*',['get','h'],EXAG]
+      }});
+    setYear(0);
+  });
+
+  const scrub=document.getElementById('scrub');
+  scrub.max=serie.length-1;
+  scrub.oninput=()=>setYear(+scrub.value);
+
+  let playing=false,i=0,timer=null;
+  document.getElementById('play').onclick=function(){
+    if(playing){clearInterval(timer);playing=false;this.textContent='▶ Play';return;}
+    playing=true;this.textContent='⏸ Pausa';
+    if(i>=serie.length-1)i=0;
+    timer=setInterval(()=>{
+      i++;setYear(i);scrub.value=i;
+      if(i>=serie.length-1){clearInterval(timer);playing=false;document.getElementById('play').textContent='▶ Play';}
+    },650);
+  };
+});
+
+const precip={2018:2684,2019:2471,2020:2314,2021:1852,2022:2910,2023:3141,2024:2910,2025:2221};
+function setYear(idx){
+  const d=serie[idx];
+  document.getElementById('year').textContent=d.y;
+  document.getElementById('nivel').textContent=d.h.toFixed(1);
+  document.getElementById('lluvia').textContent=precip[d.y]||'—';
+  const ph=document.getElementById('phase');
+  if(phases[d.y]){ph.textContent=phases[d.y][0];ph.style.background=phases[d.y][1];ph.style.color='#fff';}
+  else{ph.textContent='';ph.style.background='transparent';}
+  // actualizar polígono con h del año
+  const src=map.getSource('lago');
+  if(src){const gj=src._data;gj.features.forEach(f=>f.properties.h=d.h);src.setData(gj);}
+}
+</script>
+</body>
+</html>
