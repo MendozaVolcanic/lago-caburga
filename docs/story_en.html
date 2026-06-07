@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lake Caburga · A study to unlock the conflict</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Open scientific study of the declining Lake Caburga (Chile): what the evidence says about the Trafampulli river dispute, and how similar conflicts were resolved worldwide.">
+<meta property="og:title" content="Lake Caburga · A study to unlock the conflict">
+<meta property="og:image" content="https://mendozavolcanic.github.io/lago-caburga/assets/antes_despues_lago.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1a24;--bg2:#13283a;--panel:#142434;--fg:#e8eef5;--muted:#8fa3b0;
+  --acc:#4aa3df;--warn:#e6a23c;--bad:#c0392b;--ok:#27ae60;--line:#1f3245;
+  --serif:'Newsreader',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace;}
+*{box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--fg);line-height:1.7;font-size:17px;}
+h1,h2,h3{font-family:var(--serif);}.num,.d,.n{font-family:var(--mono);}
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--acc);width:0;z-index:100;}
+.lang{position:fixed;top:12px;right:14px;z-index:101;font-family:var(--mono);font-size:.8rem;
+  background:rgba(14,26,36,.9);border:1px solid var(--line);border-radius:8px;padding:5px 10px;}
+.lang a{color:var(--muted);text-decoration:none;}.lang a.on{color:var(--acc);font-weight:600;}
+.hero{height:100vh;min-height:600px;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;padding:0 24px;background:linear-gradient(180deg,rgba(14,26,36,.55),rgba(14,26,36,.96)),
+  url('footage/wikimedia/atardecer_caburgua.jpg') center/cover;}
+.hero .kicker{font-family:var(--mono);color:var(--acc);font-size:.82rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:20px;}
+.hero h1{font-weight:700;font-size:clamp(2.4rem,6.5vw,4.8rem);margin:0 0 20px;line-height:1.05;text-shadow:0 4px 30px rgba(0,0,0,.6);max-width:15ch;}
+.hero p{font-size:clamp(1.05rem,2vw,1.35rem);max-width:660px;color:#cdd6df;margin:0 0 32px;}
+.hero .cta{padding:13px 30px;background:var(--acc);color:#fff;font-weight:600;border-radius:32px;text-decoration:none;}
+section.block{padding:90px 24px 80px;border-top:1px solid var(--line);}
+.inner{max-width:1000px;margin:0 auto;}
+.num{display:inline-block;padding:5px 14px;background:rgba(74,163,223,.12);border:1px solid var(--acc);
+  border-radius:20px;color:var(--acc);font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;}
+h2{font-size:clamp(2rem,4.4vw,3rem);margin:0 0 24px;font-weight:600;line-height:1.12;}
+h3{margin-top:48px;margin-bottom:14px;font-size:1.3rem;}
+p{color:#c9d4dd;max-width:740px;}
+.lede{font-size:1.15rem;color:#d8dfe6;border-left:3px solid var(--acc);padding-left:20px;margin-bottom:36px;max-width:740px;}
+figure{margin:34px 0;border-radius:12px;overflow:hidden;box-shadow:0 12px 44px rgba(0,0,0,.5);}
+figure img{width:100%;display:block;}figcaption{background:var(--panel);color:var(--muted);padding:13px 18px;font-size:.87rem;border-top:1px solid var(--line);}
+.metric-row{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin:36px 0;}
+.metric-box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px;text-align:center;}
+.metric-box .n{font-size:2.3rem;font-weight:800;color:var(--acc);display:block;line-height:1;}
+.metric-box .l{color:var(--muted);font-size:.82rem;margin-top:8px;line-height:1.35;}
+.verdict{background:linear-gradient(135deg,var(--panel),#172a3d);border:1px solid var(--acc);border-radius:14px;padding:34px;margin:40px 0;}
+.verdict h3{margin-top:0;color:var(--acc);}.verdict .big{font-size:1.35rem;color:var(--fg);font-weight:600;margin:16px 0;}
+table.cmp{width:100%;border-collapse:collapse;margin:30px 0;font-size:.94rem;}
+table.cmp th,table.cmp td{padding:13px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;}
+table.cmp th{color:var(--muted);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;}
+.cta-section{text-align:center;padding:80px 24px 100px;}
+.cta-section .links{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:24px;}
+.cta-section .links a{padding:11px 22px;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;text-decoration:none;font-size:.94rem;}
+footer{padding:40px 24px;text-align:center;color:var(--muted);border-top:1px solid var(--line);font-size:.86rem;}
+footer a{color:var(--acc);text-decoration:none;}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s;}.reveal.in{opacity:1;transform:none;}
+.block.b3{background:var(--bg2);}.block.b4{background:linear-gradient(180deg,var(--bg),#13241f);}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="lang"><a href="story.html">ES</a> · <a class="on">EN</a></div>
+
+<section class="hero">
+  <div class="kicker">Open study · Geology & water resources</div>
+  <h1>The lake, the data and the conflict</h1>
+  <p>What the evidence actually says about the decline of Lake Caburga — and how other places resolved the very same dispute.</p>
+  <a class="cta" href="#s1">Start ↓</a>
+</section>
+
+<section class="block" id="s1">
+<div class="inner">
+  <span class="num reveal">01 · The physics</span>
+  <h2 class="reveal">A lake that drains into the earth</h2>
+  <p class="lede reveal">Lake Caburga (Pucón, Araucanía, Chile) is unique in the country: it has no surface outlet river. Its water seeps underground through the "Ojos del Caburga". That makes it exceptionally sensitive to any change in its inflow.</p>
+  <figure class="reveal"><img src="footage/wikimedia/ojos_2019_01.jpg" alt="Ojos del Caburga"><figcaption>Ojos del Caburga — the lake's natural underground outlet · Wikimedia Commons CC BY-SA 4.0</figcaption></figure>
+  <p class="reveal">Think of a bathtub with the plug at the <em>bottom</em>, not the rim. A normal lake stops dropping at its outlet river's level. Caburga can keep emptying far below that, because its drain is underneath. A deficit that would be mild elsewhere is amplified here.</p>
+  <div class="metric-row reveal">
+    <div class="metric-box"><span class="n">327 m</span><div class="l">max depth (Campos 1987)</div></div>
+    <div class="metric-box"><span class="n">53 km²</span><div class="l">lake surface</div></div>
+    <div class="metric-box"><span class="n">335 km²</span><div class="l">contributing basin</div></div>
+    <div class="metric-box"><span class="n">−25%</span><div class="l">level drop 2000s vs 2010s</div></div>
+  </div>
+  <figure class="reveal"><img src="assets/antes_despues_lago.jpg" alt="Lake in 2019, 2022 and 2024"><figcaption>Three moments: 2019 normal · 2022 deep drought · 2024 recovery after El Niño</figcaption></figure>
+</div>
+</section>
+
+<section class="block" id="s2">
+<div class="inner">
+  <span class="num reveal">02 · The conflict</span>
+  <h2 class="reveal">Two narratives, 18 years apart</h2>
+  <p class="lede reveal">The community blames a dike that in 2007 cut off a branch of the Trafampulli river. The authorities blame the megadrought. The dispute reached the Supreme Court — but no ruling has resolved it.</p>
+  <p class="reveal">Aerial photos from 1979, 1994, 1998 and 2007 show the branch active. In 2005, residents of neighboring Lake Colico claimed a private owner had diverted it. The water authority (DGA) ordered a dike built to "restore the natural course" toward Colico. The branch to Caburga dried up.</p>
+  <p class="reveal">In May 2022, after 16 years of unanswered petitions, a local Mapuche community tore down the dike by hand in four days. The water returned. In August 2025 the Supreme Court authorized rebuilding it; by December 2025 the DGA announced the closure again, and communities are opposing it.</p>
+</div>
+</section>
+
+<section class="block b3" id="s3">
+<div class="inner">
+  <span class="num reveal">03 · Method & data</span>
+  <h2 class="reveal">How we investigated this — with open data</h2>
+  <p class="lede reveal">This study doesn't start from a position. It starts from public data and the two university reports. The whole chain is reproducible: code and data are open.</p>
+  <p class="reveal">We used three independent precipitation sources — CR2 weather stations, ERA5 satellite reanalysis via Open-Meteo (1950-2025), and the gridded CR2MET product — plus neighboring river flows, satellite snow cover, and Sentinel-2 imagery.</p>
+  <figure class="reveal"><img src="assets/precip_larga_1950_2025.png" alt="Precipitation 1950-2025"><figcaption>Annual precipitation at Lake Caburga 1950-2025 (ERA5). Sustained drought since 2010, recovery in 2022-2023 (El Niño), new decline in 2025 (La Niña).</figcaption></figure>
+  <h3 class="reveal">Methodological honesty</h3>
+  <p class="reveal">Different data products give different magnitudes. The CR2 station (direct measurement, at altitude) detects a <strong>−34%</strong> drop; the coarser ERA5 reanalysis smooths it to <strong>−7%</strong>. For mountain terrain, direct measurement is more reliable — but we show both. A Mann-Kendall test confirms the CR2 decline is statistically significant (p=0.0005).</p>
+  <figure class="reveal"><img src="assets/precip_productos.png" alt="Data product comparison"><figcaption>CR2 station vs ERA5 reanalysis — a known feature of reanalyses in mountainous areas, not an error.</figcaption></figure>
+</div>
+</section>
+
+<section class="block b4" id="s4">
+<div class="inner">
+  <span class="num reveal">04 · The evidence</span>
+  <h2 class="reveal">Our position, grounded in data</h2>
+  <table class="cmp reveal">
+    <tr><th>Question</th><th>Dike narrative</th><th>Climate narrative</th></tr>
+    <tr><td>Supporting study</td><td>U. Austral 2021</td><td>U. de Chile 2022</td></tr>
+    <tr><td>Historic Trafampulli inflow</td><td>1 to 2 m³/s</td><td>~0.3 m³/s</td></tr>
+    <tr><td>Method</td><td>Statistical trends</td><td>Calibrated water balance (R²=0.64)</td></tr>
+    <tr><td>On the drought</td><td>"Exacerbates" the decline</td><td>"First-order cause"</td></tr>
+  </table>
+  <div class="metric-row reveal">
+    <div class="metric-box"><span class="n">−34%</span><div class="l">rainfall, Caburga station</div></div>
+    <div class="metric-box"><span class="n">−11%</span><div class="l">rainfall, Pucón (lowland)</div></div>
+    <div class="metric-box"><span class="n">56→27%</span><div class="l">basin snow cover</div></div>
+    <div class="metric-box"><span class="n">+350 m</span><div class="l">recovered with El Niño, dike in place</div></div>
+  </div>
+  <figure class="reveal"><img src="assets/infografia_atribucion.png" alt="80/20 attribution"><figcaption>Result of the simplified water balance, calibrated against U. Chile 2022.</figcaption></figure>
+  <div class="verdict reveal">
+    <h3>Our position</h3>
+    <p class="big">The first-order cause is the megadrought. The dike is a real but secondary aggravating factor — on the order of 20%.</p>
+    <p>The clearest proof: when El Niño arrived in 2024, the lake recovered +350 m of shoreline <strong>without removing the dike</strong>. If the dike were the main cause, that couldn't have happened. But "secondary" is not "irrelevant": in a drying climate, closing off one of the few inflows the lake still receives is a decision the evidence does not support as necessary.</p>
+  </div>
+</div>
+</section>
+
+<section class="block" id="s5">
+<div class="inner">
+  <span class="num reveal">05 · The way out</span>
+  <h2 class="reveal">How others unlocked the same conflict</h2>
+  <p class="lede reveal">Caburga is not the world's first lake caught between drought and human intervention. The cases that were resolved share a pattern — and so do the ones that stalled. The good news: there is a proven path.</p>
+  <p class="reveal">The model that worked is <strong>Mono Lake (California)</strong>: identical story (a city diverted the inflows, the lake dropped 14 m, the ecosystem collapsed), resolved not by winning a lawsuit but with three things — an <strong>agreed target level</strong>, <strong>independent science with permanent monitoring</strong>, and <strong>regular meetings of all parties</strong>. The aqueduct still runs, but regulated to reach that level.</p>
+  <p class="reveal">Six steps for Caburga: (1) shared transparent data; (2) a measurable target level instead of blame; (3) real flow gauges on the Río Blanco, Trafampulli and the Ojos; (4) legal protection of the lake (as Aculeo, declared an Urban Wetland in 2025); (5) whole-basin management; (6) using the El Niño window to reach agreement calmly. See the <a href="solucion.html" style="color:var(--acc)">full proposal</a>.</p>
+  <p class="reveal">This study takes a position because the evidence allows it. But its goal is not to win the argument — it is to give the community, the authorities and scientists a common ground of data, so the decision can be made calmly while there is still water to discuss it.</p>
+</div>
+</section>
+
+<section class="cta-section">
+  <h2 style="margin-bottom:14px;">Explore the evidence yourself</h2>
+  <div class="links">
+    <a href="terrain.html">🏔 3D terrain map</a>
+    <a href="explorador.html">📊 Data explorer</a>
+    <a href="Estudio_Lago_Caburga.pdf">📄 PDF</a>
+    <a href="https://github.com/MendozaVolcanic/lago-caburga">GitHub repository</a>
+  </div>
+</section>
+
+<footer>Open study · Data CC BY 4.0 · Sources: CR2, DGA, Open-Meteo (ERA5), U. Austral, U. de Chile · <a href="https://github.com/MendozaVolcanic/lago-caburga">github.com/MendozaVolcanic/lago-caburga</a></footer>
+
+<script>
+const obs=new IntersectionObserver((es)=>{for(const e of es){if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}}},{threshold:.1,rootMargin:'0px 0px -60px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const prog=document.getElementById('progress');
+addEventListener('scroll',()=>{const h=document.documentElement;prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+</script>
+</body>
+</html>
