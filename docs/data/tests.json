@@ -1,0 +1,17 @@
+{
+ "mann_kendall_openmeteo": {
+  "tau": -0.034,
+  "p": 0.6701,
+  "tendencia": "sin tendencia significativa"
+ },
+ "pettitt": {
+  "Open-Meteo": {
+   "año_quiebre": 2006,
+   "p": 0.5702
+  },
+  "CR2": {
+   "año_quiebre": 1997,
+   "p": 0.0037
+  }
+ }
+}

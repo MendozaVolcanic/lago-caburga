@@ -1,0 +1,32 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "nombre": "Cuenca aportante Lago Caburga (aproximada)",
+        "metodo": "Divisoria topografica aproximada (~335 km2). La delineacion D8 automatica falla por el drenaje subterraneo del lago; este contorno traza la divisoria principal incluyendo la subcuenca del Rio Blanco al norte.",
+        "area_km2": 335
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-71.79, -39.00],
+          [-71.73, -39.04],
+          [-71.71, -39.10],
+          [-71.72, -39.16],
+          [-71.75, -39.21],
+          [-71.77, -39.25],
+          [-71.81, -39.27],
+          [-71.85, -39.25],
+          [-71.87, -39.20],
+          [-71.87, -39.14],
+          [-71.85, -39.08],
+          [-71.83, -39.03],
+          [-71.81, -39.00],
+          [-71.79, -39.00]
+        ]]
+      }
+    }
+  ]
+}

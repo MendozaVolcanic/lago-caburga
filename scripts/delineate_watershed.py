@@ -20,9 +20,9 @@ DEM_DIR = ROOT / "data" / "raw" / "dem"
 OUT = ROOT / "docs" / "data"
 OUT.mkdir(parents=True, exist_ok=True)
 
-# Punto de salida (pour point): desembocadura sur del lago hacia los Ojos
-# Usamos el extremo sur del lago donde drena subterráneamente
-POUR = (-71.815, -39.245)  # lon, lat — cerca de la salida sur
+# Punto de salida (pour point): el Río Caburga (emisario superficial) sale
+# por el sur. Buscamos la celda de máxima acumulación en esa zona.
+POUR = (-71.80, -39.25)  # lon, lat — zona de salida sur del lago
 
 
 def mosaico() -> Path:
@@ -57,10 +57,26 @@ def delinear(dem_path: Path):
     fdir = grid.flowdir(inflated)
     acc = grid.accumulation(fdir)
 
-    # Snap pour point a celda de alta acumulación
+    # Snap pour point a la celda de MÁXIMA acumulación dentro de una ventana
+    # alrededor de la salida del lago (evita engancharse a afluentes menores).
     x, y = POUR
-    x_snap, y_snap = grid.snap_to_mask(acc > 5000, (x, y))
-    print(f"  pour point snap: ({x_snap:.4f},{y_snap:.4f}), acc max={acc.max():.0f}")
+    accview = grid.view(acc)
+    # Ventana de búsqueda ±0.05° alrededor del pour point
+    import numpy as _np
+    rows, cols = accview.shape
+    aff = grid.affine
+    # convertir lon/lat a índices
+    col0 = int((x - 0.05 - aff.c) / aff.a); col1 = int((x + 0.05 - aff.c) / aff.a)
+    row0 = int((y + 0.05 - aff.f) / aff.e); row1 = int((y - 0.05 - aff.f) / aff.e)
+    col0, col1 = sorted((max(0, col0), min(cols, col1)))
+    row0, row1 = sorted((max(0, row0), min(rows, row1)))
+    win = accview[row0:row1, col0:col1]
+    ri, ci = _np.unravel_index(_np.argmax(win), win.shape)
+    gr, gc = row0 + ri, col0 + ci
+    x_snap = aff.c + (gc + 0.5) * aff.a
+    y_snap = aff.f + (gr + 0.5) * aff.e
+    print(f"  pour point snap: ({x_snap:.4f},{y_snap:.4f}), "
+          f"acc local={win.max():.0f}, acc global max={acc.max():.0f}")
 
     catch = grid.catchment(x=x_snap, y=y_snap, fdir=fdir, xytype="coordinate")
     grid.clip_to(catch)
