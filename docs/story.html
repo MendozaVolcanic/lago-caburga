@@ -9,15 +9,21 @@
 <meta property="og:description" content="La evidencia, una postura honesta, y un camino de solución inspirado en casos que sí funcionaron.">
 <meta property="og:image" content="https://mendozavolcanic.github.io/lago-caburga/assets/antes_despues_lago.jpg">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0e1a24; --bg2:#13283a; --panel:#142434; --fg:#e8eef5; --muted:#7c8fa1;
+  --bg:#0e1a24; --bg2:#13283a; --panel:#142434; --fg:#e8eef5; --muted:#8fa3b0;
   --acc:#4aa3df; --warn:#e6a23c; --bad:#c0392b; --ok:#27ae60; --line:#1f3245;
+  --serif:'Newsreader',Georgia,serif; --sans:'Inter',system-ui,sans-serif; --mono:'IBM Plex Mono',monospace;
 }
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
-  background:var(--bg);color:var(--fg);line-height:1.65;font-size:17px;}
+body{margin:0;font-family:var(--sans);
+  background:var(--bg);color:var(--fg);line-height:1.7;font-size:17px;}
+h1,h2,h3,.hero h1{font-family:var(--serif);}
+.num,.tline .d,.metric-box .n,.kicker,.coord{font-family:var(--mono);}
 
 /* Progress bar */
 #progress{position:fixed;top:0;left:0;height:3px;background:var(--acc);width:0;z-index:100;transition:width .1s;}
@@ -47,7 +53,7 @@ section.block{padding:96px 24px 84px;border-top:1px solid var(--line);}
 .num{display:inline-block;padding:5px 14px;background:rgba(74,163,223,.12);border:1px solid var(--acc);
   border-radius:20px;color:var(--acc);font-size:.76rem;font-weight:700;letter-spacing:.1em;
   text-transform:uppercase;margin-bottom:20px;}
-h2{font-size:clamp(1.8rem,4vw,2.7rem);margin:0 0 24px;font-weight:700;letter-spacing:-.01em;}
+h2{font-size:clamp(2rem,4.4vw,3rem);margin:0 0 24px;font-weight:600;letter-spacing:-.01em;line-height:1.12;}
 h3{margin-top:52px;margin-bottom:14px;font-size:1.3rem;}
 p{color:#c9d4dd;max-width:740px;}
 .lede{font-size:1.15rem;color:#d8dfe6;max-width:740px;border-left:3px solid var(--acc);padding-left:20px;margin-bottom:38px;}

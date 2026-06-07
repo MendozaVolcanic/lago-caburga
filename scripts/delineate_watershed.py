@@ -10,6 +10,10 @@ import sys, json
 from pathlib import Path
 import numpy as np
 
+# Compat NumPy 2.0: pysheds usa np.in1d (removido). Alias a np.isin.
+if not hasattr(np, "in1d"):
+    np.in1d = np.isin
+
 sys.stdout.reconfigure(encoding="utf-8")
 ROOT = Path(__file__).resolve().parents[1]
 DEM_DIR = ROOT / "data" / "raw" / "dem"
