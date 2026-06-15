@@ -5,10 +5,18 @@
 <title>Lago Caburga — análisis abierto</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Análisis abierto del descenso del Lago Caburga y la polémica del río Trafampulli. Datos, estudios y balance hídrico.">
+<meta property="og:title" content="Lago Caburga — estudio abierto">
+<meta property="og:description" content="Por qué se vacía el Lago Caburga: datos, evidencia y una propuesta para destrabar el conflicto.">
+<meta property="og:image" content="https://mendozavolcanic.github.io/lago-caburga/assets/antes_despues_lago.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root { --bg:#0e1a24; --fg:#e8eef5; --muted:#7c8fa1; --acc:#4aa3df; --warn:#e6a23c; --bad:#c0392b; --ok:#27ae60; }
+:root { --bg:#0e1a24; --fg:#e8eef5; --muted:#8fa3b0; --acc:#4aa3df; --warn:#e6a23c; --bad:#c0392b; --ok:#27ae60;
+  --serif:'Newsreader',Georgia,serif; --sans:'Inter',system-ui,sans-serif; --mono:'IBM Plex Mono',monospace; }
 * { box-sizing:border-box; }
-body { margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--fg); line-height:1.55; }
+body { margin:0; font-family:var(--sans); background:var(--bg); color:var(--fg); line-height:1.6; }
+h1,h2,h3 { font-family:var(--serif); }
 .hero { padding:80px 24px 60px; text-align:center; background:linear-gradient(180deg,#0e1a24 0%,#13283a 100%); }
 .hero h1 { margin:0 0 12px; font-size:clamp(2rem, 5vw, 3.5rem); font-weight:700; letter-spacing:-0.02em; }
 .hero p { max-width:720px; margin:0 auto; color:var(--muted); font-size:1.15rem; }
@@ -138,7 +146,7 @@ footer { padding:40px 24px; text-align:center; color:var(--muted); border-top:1p
     corresponden al espejo del lago. Generado con
     <a href="https://github.com/MendozaVolcanic/lago-caburga/blob/main/scripts/sentinel2_caburga.py" style="color:var(--acc)">scripts/sentinel2_caburga.py</a>.
   </p>
-  <img src="../notebooks/figs/sentinel_timelapse.gif"
+  <img src="assets/sentinel_timelapse.gif" loading="lazy"
        alt="Timelapse Sentinel-2 NDWI Lago Caburga"
        style="width:100%; max-width:720px; display:block; margin:0 auto; border-radius:8px;">
 </section>
@@ -147,27 +155,27 @@ footer { padding:40px 24px; text-align:center; color:var(--muted); border-top:1p
   <h2>Galería</h2>
   <div class="gallery">
     <figure>
-      <img src="footage/wikimedia/caburgua_playa_2019_01.jpg" alt="Lago Caburga playa 2019">
+      <img loading="lazy" src="footage/wikimedia/caburgua_playa_2019_01.jpg" alt="Lago Caburga playa 2019">
       <figcaption>2019 · estado normal · CC BY-SA 4.0</figcaption>
     </figure>
     <figure>
-      <img src="footage/wikimedia/lago_caburgua_2022.jpg" alt="Lago Caburga 2022 sequía">
+      <img loading="lazy" src="footage/wikimedia/lago_caburgua_2022.jpg" alt="Lago Caburga 2022 sequía">
       <figcaption>2022 · sequía · CC BY-SA 4.0</figcaption>
     </figure>
     <figure>
-      <img src="footage/prensa/terram_2024_recuperacion.jpg" alt="Lago Caburga 2024 recuperado">
+      <img loading="lazy" src="footage/prensa/terram_2024_recuperacion.jpg" alt="Lago Caburga 2024 recuperado">
       <figcaption>oct 2024 · recuperación · © Terram</figcaption>
     </figure>
     <figure>
-      <img src="footage/wikimedia/ojos_2019_01.jpg" alt="Ojos del Caburga">
+      <img loading="lazy" src="footage/wikimedia/ojos_2019_01.jpg" alt="Ojos del Caburga">
       <figcaption>Ojos del Caburga · drenaje subterráneo</figcaption>
     </figure>
     <figure>
-      <img src="footage/wikimedia/atardecer_caburgua.jpg" alt="Atardecer en Caburga">
+      <img loading="lazy" src="footage/wikimedia/atardecer_caburgua.jpg" alt="Atardecer en Caburga">
       <figcaption>atardecer · CC BY-SA 3.0</figcaption>
     </figure>
     <figure>
-      <img src="footage/wikimedia/vista_desde_villarrica.jpg" alt="Vista desde Villarrica">
+      <img loading="lazy" src="footage/wikimedia/vista_desde_villarrica.jpg" alt="Vista desde Villarrica">
       <figcaption>vista desde el volcán Villarrica</figcaption>
     </figure>
   </div>

@@ -1,11 +1,24 @@
+# Núcleo de análisis
 pandas>=2.0
-numpy>=1.24
+numpy>=1.24,<2.1
 matplotlib>=3.7
 requests>=2.31
+
+# Dashboard y mapas
 streamlit>=1.30
 folium>=0.16
 streamlit-folium>=0.20
+
+# Geoespacial / DEM / cuenca
 geopandas>=1.0
-pystac-client>=0.7
 rasterio>=1.3
 rioxarray>=0.15
+shapely>=2.0
+pyproj>=3.5
+pysheds>=0.4          # delineación de cuenca (usa np.in1d → ver parche en script)
+pystac-client>=0.7    # Sentinel-2 vía STAC
+
+# Multimedia y reportes
+imageio[ffmpeg]>=2.31  # GIF/MP4 de timelapse y video
+pillow>=10.0           # composición de imágenes
+reportlab>=4.0         # PDF ejecutivo
