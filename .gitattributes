@@ -1,0 +1,23 @@
+# Normalizar saltos de línea: texto a LF en el repo, auto en checkout
+* text=auto eol=lf
+
+# Tipos de texto explícitos
+*.py    text eol=lf
+*.html  text eol=lf
+*.css   text eol=lf
+*.js    text eol=lf
+*.md    text eol=lf
+*.csv   text eol=lf
+*.json  text eol=lf
+*.geojson text eol=lf
+*.sh    text eol=lf
+
+# Binarios (no tocar)
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.mp4   binary
+*.pdf   binary
+*.tif   binary
+*.zip   binary
