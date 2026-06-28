@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<title>Lago Caburga · Anatomía de un lago que se vacía</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%92%A7%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Corte transversal animado del Lago Caburga: por qué se vacía como una bañera con el tapón al fondo.">
+<meta property="og:title" content="Anatomía de un lago que se vacía">
+<meta property="og:image" content="https://mendozavolcanic.github.io/lago-caburga/assets/antes_despues_lago.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1a24;--panel:#142434;--ink:#e8eef3;--muted:#8fa3b0;--acc:#4aa3df;
+  --bad:#c0392b;--ok:#27ae60;--warn:#e6a23c;--line:#1f3245;
+  --serif:'Newsreader',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6;}
+header{text-align:center;padding:54px 24px 18px;}
+header .kicker{font-family:var(--mono);color:var(--acc);font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;}
+header h1{font-family:var(--serif);font-weight:700;font-size:clamp(1.9rem,5vw,3rem);margin:0 auto 12px;max-width:18ch;line-height:1.1;}
+header p{color:var(--muted);max-width:640px;margin:0 auto;font-size:1.05rem;}
+header a.back{color:var(--acc);text-decoration:none;font-size:.85rem;}
+.stage{max-width:1000px;margin:24px auto 0;padding:0 16px;}
+.frame{background:linear-gradient(180deg,#0c1620,#0e1a24);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,.5);}
+svg{display:block;width:100%;height:auto;}
+.hud{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center;padding:18px 20px;border-top:1px solid var(--line);background:rgba(20,36,52,.5);}
+.hud .year{font-family:var(--mono);font-size:2rem;color:var(--acc);min-width:90px;text-align:center;}
+.hud .stat{text-align:center;}
+.hud .stat b{font-family:var(--mono);font-size:1.2rem;color:var(--ink);display:block;}
+.hud .stat span{color:var(--muted);font-size:.74rem;}
+.controls{display:flex;gap:14px;align-items:center;justify-content:center;padding:16px;flex-wrap:wrap;}
+.controls button{font-family:var(--sans);background:var(--acc);color:#fff;border:none;border-radius:8px;padding:10px 20px;cursor:pointer;font-size:.92rem;font-weight:600;}
+.controls button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);}
+.controls input[type=range]{width:min(440px,70vw);accent-color:var(--acc);}
+.controls .phase{font-family:var(--mono);font-size:.8rem;padding:4px 12px;border-radius:20px;}
+.legend{max-width:1000px;margin:18px auto 0;padding:0 20px;display:grid;gap:10px 22px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));font-size:.86rem;color:var(--muted);}
+.legend .row{display:flex;gap:8px;align-items:flex-start;}
+.legend .sw{width:14px;height:14px;border-radius:3px;flex-shrink:0;margin-top:3px;}
+.note{max-width:760px;margin:30px auto;padding:0 24px;color:var(--muted);font-size:.92rem;}
+.note b{color:var(--ink);}
+footer{text-align:center;padding:40px 24px;color:var(--muted);border-top:1px solid var(--line);font-size:.85rem;margin-top:40px;}
+footer a{color:var(--acc);text-decoration:none;}
+.outlinks{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:24px auto 0;max-width:760px;padding:0 20px;}
+.outlinks a{padding:10px 18px;background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:8px;text-decoration:none;font-size:.9rem;}
+.outlinks a:hover{border-color:var(--acc);}
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">Anatomía · corte transversal</div>
+  <h1>Por qué el Caburga se vacía como una bañera con el tapón al fondo</h1>
+  <p>Una vista de perfil del lago y su valle. Dale play para ver cómo baja el agua con la sequía y el dique — y por qué su drenaje subterráneo lo hace tan frágil.</p>
+  <p style="margin-top:14px;"><a class="back" href="index.html">← Volver al estudio</a></p>
+</header>
+
+<div class="stage">
+  <div class="frame">
+    <svg viewBox="0 0 1000 580" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Corte transversal animado del Lago Caburga">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#13283a"/><stop offset="1" stop-color="#0e1a24"/>
+        </linearGradient>
+        <linearGradient id="agua" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#5fb0e8"/><stop offset="1" stop-color="#1f5f8f"/>
+        </linearGradient>
+        <linearGradient id="roca" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#3a3330"/><stop offset="1" stop-color="#241f1d"/>
+        </linearGradient>
+        <linearGradient id="lava" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#4a2f2a"/><stop offset="1" stop-color="#2a1c19"/>
+        </linearGradient>
+        <clipPath id="basin"><path d="M250,250 C300,250 330,330 380,400 C430,470 470,500 520,500 C590,500 640,460 690,400 C740,340 760,270 810,255 L810,560 L250,560 Z"/></clipPath>
+      </defs>
+
+      <rect width="1000" height="580" fill="url(#sky)"/>
+
+      <!-- Montañas / valle glacial -->
+      <path d="M0,300 L120,180 L210,250 L250,250 C300,250 330,330 380,400 C430,470 470,500 520,500 C590,500 640,460 690,400 C740,340 760,270 810,255 L860,210 L960,150 L1000,200 L1000,580 L0,580 Z"
+            fill="url(#roca)"/>
+      <!-- Tapón de lava al fondo (bloquea el desagüe superficial) -->
+      <path d="M520,500 C600,500 660,470 690,430 L760,470 L740,560 L520,560 Z" fill="url(#lava)" opacity="0.9"/>
+      <text x="700" y="520" fill="#a98" font-family="IBM Plex Mono, monospace" font-size="12">tapón de lava</text>
+
+      <!-- Cuenca con agua (clip) -->
+      <g clip-path="url(#basin)">
+        <rect id="water" x="250" y="250" width="560" height="320" fill="url(#agua)" opacity="0.92"/>
+        <!-- línea de superficie -->
+        <rect id="surface" x="250" y="250" width="560" height="3" fill="#aee0ff" opacity="0.9"/>
+      </g>
+
+      <!-- Banda de playa expuesta (se dibuja sobre la roca, crece al bajar) -->
+      <text id="beachLbl" x="300" y="300" fill="#d8c9a0" font-family="IBM Plex Mono, monospace" font-size="12" opacity="0">playa expuesta</text>
+
+      <!-- Río Blanco (afluente principal, entra arriba-izquierda) -->
+      <path id="rioBlanco" d="M120,185 C160,210 200,235 250,255" stroke="#5fb0e8" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <text x="80" y="175" fill="#9cc7e6" font-family="IBM Plex Mono, monospace" font-size="13">Río Blanco</text>
+      <text x="80" y="192" fill="#6b8597" font-family="IBM Plex Mono, monospace" font-size="10">54% del aporte</text>
+
+      <!-- Trafampulli + bifurcación + dique -->
+      <path id="trafa" d="M960,150 C900,175 860,195 840,215" stroke="#e6a23c" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <text x="880" y="140" fill="#e6c389" font-family="IBM Plex Mono, monospace" font-size="13">Trafampulli</text>
+      <!-- brazo al Caburga -->
+      <path id="brazo" d="M840,215 C825,230 818,240 810,255" stroke="#5fb0e8" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <!-- brazo al Colico (se va fuera de cuadro) -->
+      <path d="M840,215 C880,235 920,250 1000,250" stroke="#e6a23c" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.85"/>
+      <text x="905" y="270" fill="#b78a4a" font-family="IBM Plex Mono, monospace" font-size="11">→ Lago Colico</text>
+      <!-- Dique (rect rojo que aparece) -->
+      <g id="dique" opacity="0">
+        <rect x="824" y="232" width="10" height="26" rx="2" fill="#c0392b"/>
+        <text x="838" y="246" fill="#e8a3a3" font-family="IBM Plex Mono, monospace" font-size="11">dique 2007</text>
+      </g>
+
+      <!-- Ojos del Caburga: túnel subterráneo desde el fondo hacia abajo-derecha -->
+      <path id="tunel" d="M560,495 C620,520 700,540 770,545 C830,549 860,540 880,520"
+            stroke="#9b59b6" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="3 5" opacity="0.85"/>
+      <circle cx="885" cy="512" r="16" fill="none" stroke="#9b59b6" stroke-width="3"/>
+      <circle cx="885" cy="512" r="6" fill="#9b59b6"/>
+      <text x="852" y="498" fill="#c79bdb" font-family="IBM Plex Mono, monospace" font-size="12">Ojos del</text>
+      <text x="852" y="514" fill="#c79bdb" font-family="IBM Plex Mono, monospace" font-size="12">Caburga</text>
+      <text x="500" y="540" fill="#8a6fa0" font-family="IBM Plex Mono, monospace" font-size="11">drenaje subterráneo (siempre activo)</text>
+
+      <!-- Partículas de flujo (se animan por JS) -->
+      <g id="particulas"></g>
+
+      <!-- Etiqueta de profundidad -->
+      <text x="300" y="470" fill="#bcd4e6" font-family="IBM Plex Mono, monospace" font-size="12">prof. máx 327 m</text>
+    </svg>
+  </div>
+
+  <div class="hud">
+    <div class="year" id="year">2000</div>
+    <div class="stat"><b id="nivel">9.6 m</b><span>nivel relativo</span></div>
+    <div class="stat"><b id="lluvia">—</b><span>lluvia (mm/año)</span></div>
+    <div class="stat"><b id="playa">0 m</b><span>playa expuesta</span></div>
+    <div class="phase" id="phase"></div>
+  </div>
+
+  <div class="controls">
+    <button id="play">▶ Play</button>
+    <input type="range" id="scrub" min="0" max="25" value="0" step="1">
+    <button class="ghost" id="diqueBtn">Mostrar/ocultar dique</button>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="row"><span class="sw" style="background:#5fb0e8"></span><div><b style="color:#9cc7e6">Afluentes</b> — Río Blanco (principal) y el brazo del Trafampulli que llegaba al lago.</div></div>
+  <div class="row"><span class="sw" style="background:#e6a23c"></span><div><b style="color:#e6c389">Trafampulli → Colico</b> — el caudal que el dique desvió por completo desde 2007.</div></div>
+  <div class="row"><span class="sw" style="background:#9b59b6"></span><div><b style="color:#c79bdb">Ojos del Caburga</b> — el desagüe subterráneo por la roca volcánica. Nunca se detiene.</div></div>
+  <div class="row"><span class="sw" style="background:#c0392b"></span><div><b style="color:#e8a3a3">El dique</b> — cortó el brazo del Trafampulli. Quita un aporte en un lago que ya drena por el fondo.</div></div>
+</div>
+
+<div class="note">
+  <p><b>La idea clave:</b> un lago normal tiene su desagüe en el borde, así que deja de bajar al llegar a ese nivel. El Caburga drena por el <b>fondo</b>, a través de la roca volcánica, hacia los Ojos del Caburga. Ese drenaje no se detiene nunca. Por eso, si entra menos agua de la que sale —por la sequía, o porque el dique le quitó un afluente— el nivel sigue cayendo sin freno natural. La animación muestra el nivel real (proxy) año a año: cae con la megasequía, toca fondo en 2021, y se recupera con El Niño en 2024 antes de volver a bajar en 2025.</p>
+</div>
+
+<div class="outlinks">
+  <a href="nivel3d.html">💧 Verlo en 3D sobre el terreno</a>
+  <a href="explorador.html">📊 Los datos detrás</a>
+  <a href="story.html">📖 El estudio completo</a>
+</div>
+
+<footer>
+  Esquema didáctico (no a escala) · Datos de nivel: proxy U. Austral + Open-Meteo · <a href="https://github.com/MendozaVolcanic/lago-caburga">github.com/MendozaVolcanic/lago-caburga</a>
+</footer>
+
+<script>
+// Geometría de la superficie del agua dentro de la cuenca
+const Y_FULL = 250;   // nivel alto (y menor = más arriba)
+const Y_LOW  = 430;   // nivel bajo
+const H_MAX  = 9.8, H_MIN = 4.8;   // niveles relativos (m) del proxy
+
+// Serie nivel (proxy) + lluvia
+const serie=[
+ {y:2000,h:9.6},{y:2001,h:9.4},{y:2002,h:9.8},{y:2003,h:8.9},{y:2004,h:9.0},
+ {y:2005,h:9.3},{y:2006,h:9.7},{y:2007,h:8.7},{y:2008,h:8.2},{y:2009,h:9.1},
+ {y:2010,h:8.0},{y:2011,h:7.6},{y:2012,h:7.0},{y:2013,h:6.8},{y:2014,h:7.2},
+ {y:2015,h:7.0},{y:2016,h:5.6},{y:2017,h:6.4},{y:2018,h:6.6},{y:2019,h:5.9},
+ {y:2020,h:5.4},{y:2021,h:4.8},{y:2022,h:6.7},{y:2023,h:8.1},{y:2024,h:8.6},{y:2025,h:6.2}
+];
+const precip={2018:2684,2019:2471,2020:2314,2021:1852,2022:2910,2023:3141,2024:2910,2025:2221};
+const phases={2007:['Dique Trafampulli','#c0392b'],2010:['Megasequía','#e6a23c'],
+  2022:['Cae el dique','#27ae60'],2023:['El Niño','#4aa3df'],2025:['La Niña','#c0392b']};
+
+const water=document.getElementById('water');
+const surface=document.getElementById('surface');
+const beachLbl=document.getElementById('beachLbl');
+const $=id=>document.getElementById(id);
+
+function hToY(h){ return Y_FULL + (H_MAX-h)/(H_MAX-H_MIN)*(Y_LOW-Y_FULL); }
+
+let curY = hToY(serie[0].h);
+function render(idx, animate=true){
+  const d=serie[idx];
+  const targetY=hToY(d.h);
+  const startY=curY, t0=performance.now(), dur=animate?550:0;
+  function step(now){
+    const k=dur?Math.min(1,(now-t0)/dur):1;
+    const ease=1-Math.pow(1-k,3);
+    const y=startY+(targetY-startY)*ease;
+    water.setAttribute('y', y);
+    water.setAttribute('height', 560-y);
+    surface.setAttribute('y', y);
+    if(k<1) requestAnimationFrame(step); else curY=targetY;
+  }
+  requestAnimationFrame(step);
+
+  $('year').textContent=d.y;
+  $('nivel').textContent=d.h.toFixed(1)+' m';
+  $('lluvia').textContent=precip[d.y]||'—';
+  // "playa expuesta": proporcional a cuánto bajó respecto al máximo
+  const playa=Math.round((H_MAX-d.h)/(H_MAX-H_MIN)*300);
+  $('playa').textContent=playa+' m';
+  beachLbl.setAttribute('opacity', playa>40?0.8:0);
+  beachLbl.setAttribute('y', hToY(d.h)-6);
+  const ph=$('phase');
+  if(phases[d.y]){ph.textContent=phases[d.y][0];ph.style.background=phases[d.y][1];ph.style.color='#fff';}
+  else{ph.textContent='';ph.style.background='transparent';}
+  // dique aparece desde 2007 hasta 2021 (derribado en 2022)
+  $('dique').setAttribute('opacity', (d.y>=2007 && d.y<2022)?1:0);
+  $('brazo').setAttribute('opacity', (d.y>=2007 && d.y<2022)?0.15:1);
+}
+
+// Partículas de flujo
+const NS='http://www.w3.org/2000/svg';
+const pg=$('particulas');
+const paths=[
+  {sel:'#rioBlanco',color:'#aee0ff',n:4},
+  {sel:'#trafa',color:'#f0c98a',n:3},
+  {sel:'#tunel',color:'#c79bdb',n:5},
+];
+const dots=[];
+paths.forEach(p=>{
+  const path=document.querySelector(p.sel);
+  const len=path.getTotalLength();
+  for(let i=0;i<p.n;i++){
+    const c=document.createElementNS(NS,'circle');
+    c.setAttribute('r',3); c.setAttribute('fill',p.color);
+    pg.appendChild(c);
+    dots.push({c,path,len,off:i/p.n,sel:p.sel});
+  }
+});
+function animateDots(now){
+  const t=(now/2200)%1;
+  dots.forEach(d=>{
+    // ocultar partículas del brazo del Trafampulli cuando hay dique
+    let prog=(t+d.off)%1;
+    const pt=d.path.getPointAtLength(prog*d.len);
+    d.c.setAttribute('cx',pt.x); d.c.setAttribute('cy',pt.y);
+    let vis=1;
+    if(d.sel==='#trafa'){ const yr=serie[idx].y; if(yr>=2007&&yr<2022) vis=0.2; }
+    d.c.setAttribute('opacity',vis);
+  });
+  requestAnimationFrame(animateDots);
+}
+requestAnimationFrame(animateDots);
+
+let idx=0, playing=false, timer=null;
+function setIdx(i){ idx=i; $('scrub').value=i; render(i); }
+$('scrub').oninput=e=>{ if(playing) stop(); setIdx(+e.target.value); };
+function stop(){ clearInterval(timer); playing=false; $('play').textContent='▶ Play'; }
+$('play').onclick=()=>{
+  if(playing){ stop(); return; }
+  playing=true; $('play').textContent='⏸ Pausa';
+  if(idx>=serie.length-1) idx=0;
+  timer=setInterval(()=>{
+    idx++; setIdx(idx);
+    if(idx>=serie.length-1){ stop(); }
+  },720);
+};
+let diqueForce=null;
+$('diqueBtn').onclick=()=>{
+  const cur=$('dique').getAttribute('opacity')==='1';
+  $('dique').setAttribute('opacity',cur?0:1);
+  $('brazo').setAttribute('opacity',cur?1:0.15);
+};
+
+render(0,false);
+</script>
+</body>
+</html>
