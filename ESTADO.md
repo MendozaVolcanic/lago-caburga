@@ -67,15 +67,22 @@ STORYBOARD.md FOOTAGE.md LICENSE .gitattributes
 - ⭐ anatomia.html (corte transversal animado)
 - dashboard tab Balance → Plotly interactivo
 
-## PENDIENTES (prioridad de mejoras visuales solicitadas)
+## Mejoras visuales (sesión actual) — TODAS HECHAS ✅
 
-1. **nivel3d más pulido** — transiciones suaves del bloque de agua, anillo de playa
-   expuesta que crece, autorotación de cámara.
-2. **Resto del dashboard a Plotly** — convertir charts de anomalías y caudales
-   (tab "Datos observados") para consistencia interactiva (tab1 ya está hecho).
-3. **Count-up animado** en métricas del index + reveal de la galería al scroll.
-4. **Hero con shimmer de agua** sutil (CSS) en index/story.
-5. **Mini-mapa locator** en páginas 3D (dónde está Caburga en Chile).
+1. ✅ **nivel3d más pulido** — tween con easing (easeInOutQuad) del bloque de agua,
+   anillo de "playa expuesta" (banda tipo bañera entre nivel actual y máximo histórico)
+   que crece al bajar, autorotación suave de cámara en play.
+2. ✅ **Resto del dashboard a Plotly** — anomalías de precipitación y caudales (tab
+   "Datos observados") ahora interactivos. De paso se arregló un bug: `legend` estaba
+   en PLOTLY_LAYOUT y al combinarlo con `legend=` explícito reventaba update_layout
+   (afectaba también al tab Balance). Dashboard verificado: arranca, HTTP 200, figuras
+   serializan contra datos reales.
+3. ✅ **Count-up animado** en las 4 cifras del index (IntersectionObserver, parsea
+   números dentro de "-25%", "56→27%", "~80/20") + reveal escalonado de la galería.
+4. ✅ **Hero con shimmer de agua** sutil (CSS, repeating-linear-gradient animado) en
+   index y story. Respeta prefers-reduced-motion.
+5. ✅ **Mini-mapa locator** (SVG estilizado de Chile con punto en Caburga 39°S) en
+   nivel3d, terrain y recorrido.
 
 ## PENDIENTE DE DATOS (bloquea calibración, requiere acción humana)
 
