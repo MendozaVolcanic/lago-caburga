@@ -18,7 +18,17 @@
 * { box-sizing:border-box; }
 body { margin:0; font-family:var(--sans); background:var(--bg); color:var(--fg); line-height:1.6; }
 h1,h2,h3 { font-family:var(--serif); }
-.hero { padding:80px 24px 60px; text-align:center; background:linear-gradient(180deg,#0e1a24 0%,#13283a 100%); }
+.hero { padding:80px 24px 60px; text-align:center; position:relative; overflow:hidden;
+  background:linear-gradient(180deg,#0e1a24 0%,#13283a 100%); }
+.hero::before { content:''; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.55;
+  background:
+    radial-gradient(120% 60% at 50% 120%, rgba(74,163,223,.20), transparent 60%),
+    repeating-linear-gradient(100deg, transparent 0 38px, rgba(74,163,223,.05) 38px 76px);
+  background-size:auto, 220% 100%;
+  animation:heroShimmer 14s linear infinite; }
+@keyframes heroShimmer { from{background-position:0 0, 0 0;} to{background-position:0 0, 220% 0;} }
+.hero > * { position:relative; z-index:1; }
+@media (prefers-reduced-motion:reduce){ .hero::before{animation:none;} }
 .hero h1 { margin:0 0 12px; font-size:clamp(2rem, 5vw, 3.5rem); font-weight:700; letter-spacing:-0.02em; }
 .hero p { max-width:720px; margin:0 auto; color:var(--muted); font-size:1.15rem; }
 .container { max-width:1100px; margin:0 auto; padding:48px 24px; }
@@ -46,6 +56,9 @@ h2 { font-size:1.6rem; border-left:4px solid var(--acc); padding-left:12px; marg
 .gallery figure { margin:0; }
 .gallery img { width:100%; height:200px; object-fit:cover; border-radius:6px; display:block; }
 .gallery figcaption { color:var(--muted); font-size:0.82rem; padding:6px 2px 0; }
+.gallery figure { opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
+.gallery figure.in { opacity:1; transform:none; }
+@media (prefers-reduced-motion:reduce){ .gallery figure{opacity:1;transform:none;transition:none;} }
 footer { padding:40px 24px; text-align:center; color:var(--muted); border-top:1px solid #1f3245; }
 .disclaimer { background:#1a2a3c; border-left:3px solid var(--warn); padding:16px 20px; border-radius:4px; color:#cdd6df; font-size:0.94rem; }
 </style>
@@ -201,6 +214,55 @@ footer { padding:40px 24px; text-align:center; color:var(--muted); border-top:1p
   <p>Datos bajo CC BY 4.0 · Código bajo MIT ·
   <a href="https://github.com/MendozaVolcanic/lago-caburga" style="color:var(--acc)">github.com/MendozaVolcanic/lago-caburga</a></p>
 </footer>
+
+<script>
+// Count-up animado de las métricas: anima cada número dentro del texto
+// (sirve para "-25%", "56→27%", "~80/20") preservando signos y símbolos.
+function countUp(el){
+  if(el.dataset.done) return;
+  el.dataset.done = '1';
+  const tokens = el.textContent.split(/(-?\d+(?:\.\d+)?)/);
+  const targets = tokens.map(t => /^-?\d+(?:\.\d+)?$/.test(t)
+    ? { num:true, val:parseFloat(t), dec:(t.split('.')[1]||'').length } : { num:false, txt:t });
+  const dur = 1100, t0 = performance.now();
+  function frame(now){
+    const k = Math.min(1, (now-t0)/dur);
+    const e = 1 - Math.pow(1-k, 3); // easeOutCubic
+    el.textContent = targets.map(t =>
+      t.num ? (t.val*e).toFixed(t.dec) : t.txt).join('');
+    if(k < 1) requestAnimationFrame(frame);
+    else el.textContent = targets.map(t => t.num ? t.val.toFixed(t.dec) : t.txt).join('');
+  }
+  requestAnimationFrame(frame);
+}
+
+const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+// Métricas: dispara el count-up cuando la sección entra en viewport.
+const metricsIO = new IntersectionObserver((entries, obs) => {
+  entries.forEach(en => {
+    if(en.isIntersecting){
+      en.target.querySelectorAll('.num').forEach(n => reduce ? null : countUp(n));
+      obs.unobserve(en.target);
+    }
+  });
+}, { threshold:0.4 });
+document.querySelectorAll('.metrics').forEach(m => metricsIO.observe(m));
+
+// Galería: reveal escalonado al hacer scroll.
+const galIO = new IntersectionObserver((entries, obs) => {
+  entries.forEach(en => {
+    if(en.isIntersecting){
+      en.target.classList.add('in');
+      obs.unobserve(en.target);
+    }
+  });
+}, { threshold:0.15 });
+document.querySelectorAll('.gallery figure').forEach((fig, i) => {
+  fig.style.transitionDelay = (i % 3) * 90 + 'ms';
+  galIO.observe(fig);
+});
+</script>
 
 </body>
 </html>
