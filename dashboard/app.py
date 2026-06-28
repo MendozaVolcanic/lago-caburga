@@ -8,11 +8,23 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "processed"
 sys.path.insert(0, str(ROOT / "notebooks"))
+
+# Paleta consistente con el sitio
+PCOL = dict(bg="#0e1a24", panel="#142434", fg="#e8eef5", muted="#8fa3b0",
+            acc="#4aa3df", bad="#c0392b", ok="#27ae60", warn="#e6a23c")
+PLOTLY_LAYOUT = dict(
+    paper_bgcolor=PCOL["bg"], plot_bgcolor=PCOL["bg"],
+    font=dict(color=PCOL["fg"], family="Inter, system-ui, sans-serif"),
+    margin=dict(l=60, r=20, t=50, b=40), hovermode="x unified",
+    legend=dict(bgcolor="rgba(20,36,52,.6)", bordercolor=PCOL["panel"], borderwidth=1),
+)
 
 # -- Parámetros del modelo ------------------------------------------------
 A_LAGO = 53e6
@@ -164,31 +176,57 @@ with tab1:
                 f"{escenario['H_m'].iloc[-1] - escenario['H_m'].iloc[0]:+.2f}")
     col4.metric("Precip prom (mm/año)", f"{(P * fac_p).mean():.0f}")
 
-    st.caption("🟦 bandas azules = El Niño · 🟥 bandas rojas = La Niña")
+    st.caption("🟦 bandas azules = El Niño · 🟥 bandas rojas = La Niña · "
+               "pasa el cursor para ver valores, arrastra para hacer zoom")
 
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 7), sharex=True,
-                                    gridspec_kw={"height_ratios": [2, 1]})
-    marca_enso(ax1)
-    marca_enso(ax2)
-    ax1.plot(base.index, base["H_m"], "o-", color="#888", lw=1.4, ms=3,
-             label="Base (observado)")
-    ax1.plot(escenario.index, escenario["H_m"], "o-", color="#c44", lw=2, ms=4,
-             label=f"Escenario (P×{fac_p:.2f}, Traf={q_traf:.1f} m³/s)")
-    ax1.axvline(2010, color="orange", ls="--", alpha=0.6, label="Megasequía")
-    ax1.axvline(2007, color="purple", ls=":", alpha=0.6, label="Dique 2007")
-    if P.index.max() >= 2022:
-        ax1.axvline(2022, color="#27ae60", ls=":", alpha=0.6, label="Cae dique 2022")
-    ax1.set(ylabel="Cota lago (m s.n.m.)", title="Cota simulada del Lago Caburga")
-    ax1.legend(loc="lower left", fontsize=9)
-    ax1.grid(alpha=0.3)
-    ax2.bar(P.index, P, color="#48a", alpha=0.6, label="P observada")
+    figp = make_subplots(rows=2, cols=1, shared_xaxes=True,
+                         row_heights=[0.62, 0.38], vertical_spacing=0.08,
+                         subplot_titles=("Cota simulada del Lago Caburga",
+                                         "Precipitación de la cuenca"))
+    # Bandas ENSO como shapes de fondo
+    for año in ENSO["niño"]:
+        if P.index.min() <= año <= P.index.max():
+            figp.add_vrect(x0=año-0.5, x1=año+0.5, fillcolor=PCOL["acc"],
+                           opacity=0.10, line_width=0, row=1, col=1)
+            figp.add_vrect(x0=año-0.5, x1=año+0.5, fillcolor=PCOL["acc"],
+                           opacity=0.10, line_width=0, row=2, col=1)
+    for año in ENSO["niña"]:
+        if P.index.min() <= año <= P.index.max():
+            figp.add_vrect(x0=año-0.5, x1=año+0.5, fillcolor=PCOL["bad"],
+                           opacity=0.10, line_width=0, row=1, col=1)
+            figp.add_vrect(x0=año-0.5, x1=año+0.5, fillcolor=PCOL["bad"],
+                           opacity=0.10, line_width=0, row=2, col=1)
+    # Líneas de cota
+    figp.add_trace(go.Scatter(x=base.index, y=base["H_m"], name="Base (observado)",
+                   mode="lines+markers", line=dict(color=PCOL["muted"], width=2),
+                   marker=dict(size=4),
+                   hovertemplate="%{x}: %{y:.2f} m<extra>Base</extra>"), row=1, col=1)
+    figp.add_trace(go.Scatter(x=escenario.index, y=escenario["H_m"],
+                   name=f"Escenario (P×{fac_p:.2f}, Traf={q_traf:.1f})",
+                   mode="lines+markers", line=dict(color=PCOL["bad"], width=3),
+                   marker=dict(size=5),
+                   hovertemplate="%{x}: %{y:.2f} m<extra>Escenario</extra>"), row=1, col=1)
+    # Eventos
+    for año, txt, col in [(2007, "Dique", PCOL["warn"]), (2010, "Megasequía", PCOL["warn"]),
+                          (2022, "Cae dique", PCOL["ok"])]:
+        if P.index.min() <= año <= P.index.max():
+            figp.add_vline(x=año, line=dict(color=col, dash="dot", width=1),
+                           row=1, col=1)
+    # Precipitación
+    figp.add_trace(go.Bar(x=P.index, y=P.values, name="P observada",
+                   marker_color=PCOL["acc"], opacity=0.65,
+                   hovertemplate="%{x}: %{y:.0f} mm<extra></extra>"), row=2, col=1)
     if fac_p != 1.0:
-        ax2.bar(P.index, P * fac_p - P, bottom=P, color="#c44", alpha=0.6,
-                label=f"Δ por factor {fac_p:.2f}")
-    ax2.set(xlabel="Año", ylabel="Precipitación (mm)")
-    ax2.legend(fontsize=9)
-    ax2.grid(axis="y", alpha=0.3)
-    st.pyplot(fig)
+        figp.add_trace(go.Bar(x=P.index, y=(P*fac_p - P).values, name=f"Δ factor {fac_p:.2f}",
+                       marker_color=PCOL["bad"], opacity=0.6,
+                       hovertemplate="+%{y:.0f} mm<extra></extra>"), row=2, col=1)
+        figp.update_layout(barmode="stack")
+    figp.update_yaxes(title_text="Cota (m s.n.m.)", gridcolor="#1f3245", row=1, col=1)
+    figp.update_yaxes(title_text="mm/año", gridcolor="#1f3245", row=2, col=1)
+    figp.update_xaxes(gridcolor="#1f3245", row=2, col=1)
+    figp.update_layout(**PLOTLY_LAYOUT, height=560,
+                       legend=dict(orientation="h", y=1.12, x=0))
+    st.plotly_chart(figp, use_container_width=True)
 
     if fuente.startswith("Open-Meteo") and base.index.max() >= 2025:
         st.info(f"📍 El modelo reproduce la **recuperación** de El Niño "

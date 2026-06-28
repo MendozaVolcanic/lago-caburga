@@ -6,6 +6,7 @@ requests>=2.31
 
 # Dashboard y mapas
 streamlit>=1.30
+plotly>=5.18           # gráficos interactivos del dashboard
 folium>=0.16
 streamlit-folium>=0.20
 
