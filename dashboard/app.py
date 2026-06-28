@@ -19,11 +19,12 @@ sys.path.insert(0, str(ROOT / "notebooks"))
 # Paleta consistente con el sitio
 PCOL = dict(bg="#0e1a24", panel="#142434", fg="#e8eef5", muted="#8fa3b0",
             acc="#4aa3df", bad="#c0392b", ok="#27ae60", warn="#e6a23c")
+# Nota: NO incluir 'legend' aquí — varias figuras pasan legend= explícito y
+# unirlo con **PLOTLY_LAYOUT daría "multiple values for keyword argument 'legend'".
 PLOTLY_LAYOUT = dict(
     paper_bgcolor=PCOL["bg"], plot_bgcolor=PCOL["bg"],
     font=dict(color=PCOL["fg"], family="Inter, system-ui, sans-serif"),
     margin=dict(l=60, r=20, t=50, b=40), hovermode="x unified",
-    legend=dict(bgcolor="rgba(20,36,52,.6)", bordercolor=PCOL["panel"], borderwidth=1),
 )
 
 # -- Parámetros del modelo ------------------------------------------------
@@ -256,18 +257,24 @@ with tab2:
     anom = cargar_anomalias()
     cols_orden = sorted(anom.columns,
                         key=lambda c: anom.loc[2010:, c].mean() if anom.loc[2010:, c].notna().any() else 0)
-    fig, ax = plt.subplots(figsize=(11, 5))
     promedio = anom[[c for c in anom.columns
                      if any(n in c for n in ["Caburgua", "Tinquilco", "Tricauco", "Llafenco"])
-                     and "Ojos" not in c]].mean(axis=1)
-    colors = ["#c44" if v < 0 else "#48a" for v in promedio.dropna().values]
-    ax.bar(promedio.dropna().index, promedio.dropna().values, color=colors, alpha=0.85)
-    ax.axhline(0, color="k", lw=0.8)
-    ax.axvline(2010, color="orange", ls="--", alpha=0.7)
-    ax.set(xlabel="Año", ylabel="Anomalía (%) vs 1965-2009",
-           title="Anomalía de precipitación promedio cuenca")
-    ax.grid(axis="y", alpha=0.3)
-    st.pyplot(fig)
+                     and "Ojos" not in c]].mean(axis=1).dropna()
+    colors = [PCOL["bad"] if v < 0 else PCOL["acc"] for v in promedio.values]
+    figa = go.Figure()
+    figa.add_trace(go.Bar(x=promedio.index, y=promedio.values, marker_color=colors,
+                          opacity=0.85, name="Anomalía",
+                          hovertemplate="%{x}: %{y:+.0f}%<extra></extra>"))
+    figa.add_hline(y=0, line=dict(color=PCOL["fg"], width=1))
+    figa.add_vline(x=2010, line=dict(color=PCOL["warn"], dash="dash", width=1.5))
+    figa.add_annotation(x=2010, y=1, yref="paper", yanchor="bottom",
+                        text="megasequía", showarrow=False, font=dict(color=PCOL["warn"], size=11))
+    figa.update_yaxes(title_text="Anomalía (%) vs 1965-2009", gridcolor="#1f3245", zeroline=False)
+    figa.update_xaxes(title_text="Año", gridcolor="#1f3245")
+    figa.update_layout(**PLOTLY_LAYOUT, height=420, showlegend=False,
+                       title="Anomalía de precipitación promedio cuenca")
+    st.plotly_chart(figa, use_container_width=True)
+    st.caption("Pasa el cursor para ver el valor de cada año · arrastra para hacer zoom.")
 
     st.subheader("Caída por estación post-2010")
     res = []
@@ -293,19 +300,22 @@ with tab2:
 
     st.subheader("Caudales medios anuales — ríos vecinos")
     Q = cargar_caudales()
-    fig, ax = plt.subplots(figsize=(11, 4.5))
+    figq = go.Figure()
     for col in Q.columns:
         s = Q[col].dropna()
         if len(s) < 5:
             continue
-        ax.plot(s.index, s.values, "o-", lw=1, ms=3, alpha=0.75,
-                label=col.split(" ", 1)[1] if " " in col else col)
-    ax.axvline(2010, color="orange", ls="--", alpha=0.5)
-    ax.set(xlabel="Año", ylabel="Caudal medio anual (m³/s)",
-           title="Caudales — ríos de la cuenca Toltén")
-    ax.legend(fontsize=8, loc="upper right")
-    ax.grid(alpha=0.3)
-    st.pyplot(fig)
+        nombre = col.split(" ", 1)[1] if " " in col else col
+        figq.add_trace(go.Scatter(x=s.index, y=s.values, mode="lines+markers",
+                       name=nombre, line=dict(width=1.5), marker=dict(size=4),
+                       hovertemplate="%{x}: %{y:.1f} m³/s<extra>" + nombre + "</extra>"))
+    figq.add_vline(x=2010, line=dict(color=PCOL["warn"], dash="dash", width=1.5))
+    figq.update_yaxes(title_text="Caudal medio anual (m³/s)", gridcolor="#1f3245")
+    figq.update_xaxes(title_text="Año", gridcolor="#1f3245")
+    figq.update_layout(**PLOTLY_LAYOUT, height=440,
+                       title="Caudales — ríos de la cuenca Toltén",
+                       legend=dict(orientation="h", y=-0.18, x=0))
+    st.plotly_chart(figq, use_container_width=True)
 
 # ============ Tab 3: Mapa ============
 with tab3:
