@@ -72,7 +72,13 @@ body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);}
 .outro .links a:hover{background:var(--acc);}
 .credit{position:fixed;bottom:6px;left:8px;z-index:4;font-family:var(--mono);font-size:.62rem;
   color:rgba(143,163,176,.6);pointer-events:none;}
-@media(max-width:600px){.step .card{max-width:100%;}.step.right .card{margin-left:0;}}
+.locator{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:6;
+  background:rgba(14,26,36,.9);border:1px solid #1f3245;border-radius:12px;
+  padding:8px 12px 6px;backdrop-filter:blur(6px);text-align:center;pointer-events:none;}
+.locator .ttl{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.locator svg{display:block;margin:0 auto;}
+.locator .lbl{font-family:var(--mono);font-size:.56rem;color:var(--acc);margin-top:3px;}
+@media(max-width:600px){.step .card{max-width:100%;}.step.right .card{margin-left:0;}.locator{display:none;}}
 </style>
 </head>
 <body>
@@ -80,6 +86,17 @@ body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);}
 <div id="map"></div>
 <div id="map-overlay"></div>
 <div class="credit">Relieve: AWS Terrarium · Satélite: Sentinel-2 cloudless / EOX</div>
+
+<div class="locator" aria-label="Ubicación del Lago Caburga en Chile">
+  <div class="ttl">Chile</div>
+  <svg width="36" height="134" viewBox="0 0 54 200" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20,12 Q17,40 22,70 Q24,95 23,120 Q22,150 25,180 L27,189 L29,180 Q33,150 31,120 Q30,95 32,70 Q36,40 34,12 Q27,8 20,12 Z"
+          fill="rgba(74,163,223,.14)" stroke="#4aa3df" stroke-width="1.3" stroke-linejoin="round"/>
+    <circle cx="27" cy="86" r="1.8" fill="#8fa3b0"/>
+    <circle cx="27" cy="112" r="3.4" fill="#c0392b" stroke="#fff" stroke-width="1"/>
+  </svg>
+  <div class="lbl">▲ Caburga · 39°S</div>
+</div>
 
 <section class="intro">
   <div class="kicker">Recorrido en 3D · 39°S</div>
