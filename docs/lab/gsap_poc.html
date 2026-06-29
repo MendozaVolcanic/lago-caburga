@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<title>Lago Caburga · POC GSAP</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%92%A7%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Prueba de concepto: animaciones del índice reimplementadas con GSAP + ScrollTrigger.">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<!-- GSAP + ScrollTrigger por CDN (sin build, igual que MapLibre) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+<style>
+:root{--bg:#0e1a24;--fg:#e8eef5;--muted:#8fa3b0;--acc:#4aa3df;--warn:#e6a23c;--bad:#c0392b;--ok:#27ae60;
+  --serif:'Newsreader',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--fg);line-height:1.6;}
+h1,h2{font-family:var(--serif);}
+.tag{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--acc);border:1px solid var(--acc);border-radius:20px;padding:4px 12px;margin-bottom:14px;}
+.hero{padding:70px 24px 40px;text-align:center;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#0e1a24,#13283a);}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);margin:0 0 10px;}
+.hero p{color:var(--muted);max-width:680px;margin:0 auto;}
+.container{max-width:1080px;margin:0 auto;padding:40px 24px 90px;}
+section{margin:90px 0;}
+h2{font-size:1.5rem;border-left:4px solid var(--acc);padding-left:12px;}
+.note{color:var(--muted);font-size:.9rem;max-width:740px;}
+/* Métricas */
+.metrics{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-top:24px;}
+.metric{background:#142434;border-radius:8px;padding:20px;text-align:center;border:1px solid #1f3245;}
+.metric .num{font-size:2.4rem;font-weight:700;color:var(--acc);display:block;font-variant-numeric:tabular-nums;}
+.metric .lbl{color:var(--muted);font-size:.84rem;margin-top:6px;}
+/* Nivel del agua: tween con ease de GSAP */
+.water-demo{margin-top:24px;display:flex;gap:28px;align-items:flex-end;flex-wrap:wrap;}
+.glass{position:relative;width:150px;height:230px;border:2px solid #2a4a63;border-top:none;
+  border-radius:0 0 14px 14px;overflow:hidden;background:linear-gradient(180deg,#0c1620,#0e1a24);}
+.beach{position:absolute;left:0;right:0;top:0;background:#d8b88c;opacity:.34;}
+.water{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(180deg,#2f6f8f,#1f6feb);}
+.wlabel{font-family:var(--mono);font-size:.8rem;color:var(--muted);margin-top:10px;text-align:center;}
+.wctrl{display:flex;flex-direction:column;gap:8px;}
+.wctrl button{background:#142434;border:1px solid #1f3245;color:var(--fg);border-radius:8px;padding:9px 14px;cursor:pointer;font-size:.85rem;}
+.wctrl button:hover{border-color:var(--acc);}
+/* Galería */
+.gallery{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:24px;}
+.gallery figure{margin:0;opacity:0;}
+.gallery img{width:100%;height:190px;object-fit:cover;border-radius:6px;display:block;}
+.gallery figcaption{color:var(--muted);font-size:.82rem;padding:6px 2px 0;}
+.spacer{height:40vh;}
+a.back{color:var(--acc);text-decoration:none;font-size:.9rem;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="tag">Prueba de concepto · GSAP</span>
+  <h1>Las animaciones de hoy, ahora con GSAP</h1>
+  <p>Mismo contenido del índice, pero el count-up, el reveal de la galería y la
+  transición del nivel de agua están movidos por <strong>GSAP + ScrollTrigger</strong>
+  en vez de <code>requestAnimationFrame</code> + <code>IntersectionObserver</code> hechos a mano.</p>
+</div>
+
+<div class="container">
+
+  <section>
+    <h2>Las 4 cifras (count-up con GSAP)</h2>
+    <p class="note">Cada número anima desde 0 al entrar en pantalla. GSAP tween un objeto
+    <code>{v:0}</code> con ease <code>power2.out</code> y reformatea el texto en <code>onUpdate</code>,
+    preservando signos y símbolos (<code>-25%</code>, <code>56→27%</code>, <code>~80/20</code>).</p>
+    <div class="metrics">
+      <div class="metric"><span class="num" data-count>-25%</span><div class="lbl">caída del nivel<br>2000-2010 vs 2011-2020</div></div>
+      <div class="metric"><span class="num" data-count>-34%</span><div class="lbl">caída precipitación<br>estación Lago Caburga post-2010</div></div>
+      <div class="metric"><span class="num" data-count>56→27%</span><div class="lbl">cobertura nieve cuenca<br>2001-2011 vs 2012-2021</div></div>
+      <div class="metric"><span class="num" data-count>~80/20</span><div class="lbl">atribución<br>megasequía / dique</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>El nivel del agua (tween con ease de GSAP)</h2>
+    <p class="note">La misma idea de <code>nivel3d.html</code>: el agua sube/baja con una transición
+    suave (<code>power2.inOut</code>) y la banda de <span style="color:#d8b88c">playa expuesta</span>
+    crece arriba. Acá GSAP anima la altura; en nivel3d animaría el valor que alimenta a MapLibre.</p>
+    <div class="water-demo">
+      <div>
+        <div class="glass">
+          <div class="beach" id="beach"></div>
+          <div class="water" id="water"></div>
+        </div>
+        <div class="wlabel">Nivel: <span id="wval">9.6</span> m</div>
+      </div>
+      <div class="wctrl">
+        <button data-h="9.6">2000 · lleno (9.6 m)</button>
+        <button data-h="4.8">2021 · mínimo (4.8 m)</button>
+        <button data-h="8.6">2024 · El Niño (8.6 m)</button>
+        <button data-h="6.2">2025 · La Niña (6.2 m)</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Galería (reveal con ScrollTrigger.batch)</h2>
+    <p class="note">Reemplaza el IntersectionObserver: <code>ScrollTrigger.batch</code> agrupa las
+    figuras que entran juntas y las anima con <code>stagger</code>. Una sola llamada, sin observers a mano.</p>
+    <div class="gallery">
+      <figure><img loading="lazy" src="../footage/wikimedia/caburgua_playa_2019_01.jpg" alt="2019"><figcaption>2019 · estado normal</figcaption></figure>
+      <figure><img loading="lazy" src="../footage/wikimedia/lago_caburgua_2022.jpg" alt="2022"><figcaption>2022 · sequía</figcaption></figure>
+      <figure><img loading="lazy" src="../footage/prensa/terram_2024_recuperacion.jpg" alt="2024"><figcaption>oct 2024 · recuperación</figcaption></figure>
+      <figure><img loading="lazy" src="../footage/wikimedia/ojos_2019_01.jpg" alt="Ojos"><figcaption>Ojos del Caburga</figcaption></figure>
+      <figure><img loading="lazy" src="../footage/wikimedia/atardecer_caburgua.jpg" alt="Atardecer"><figcaption>atardecer</figcaption></figure>
+      <figure><img loading="lazy" src="../footage/wikimedia/vista_desde_villarrica.jpg" alt="Villarrica"><figcaption>desde el Villarrica</figcaption></figure>
+    </div>
+  </section>
+
+  <div class="spacer"></div>
+  <a class="back" href="../index.html">← Volver al índice</a>
+</div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const HIGH = 10; // nivel histórico máximo (referencia de playa expuesta)
+
+// --- Count-up: anima los números dentro del texto, preservando símbolos ---
+function countUp(el){
+  const tokens = el.textContent.split(/(-?\d+(?:\.\d+)?)/);
+  const targets = tokens.map(t => /^-?\d+(?:\.\d+)?$/.test(t)
+    ? {num:true, val:parseFloat(t), dec:(t.split('.')[1]||'').length} : {num:false, txt:t});
+  const proxy = {p:0};
+  gsap.to(proxy, {p:1, duration:1.2, ease:"power2.out", onUpdate(){
+    el.textContent = targets.map(t => t.num ? (t.val*proxy.p).toFixed(t.dec) : t.txt).join('');
+  }});
+}
+ScrollTrigger.batch("[data-count]", {
+  start: "top 85%",
+  once: true,
+  onEnter: batch => batch.forEach(countUp)
+});
+
+// --- Nivel del agua: tween con ease + playa expuesta que crece ---
+const lvl = {h: 9.6};
+const water = document.getElementById('water'), beach = document.getElementById('beach'),
+      wval = document.getElementById('wval');
+function renderLevel(){
+  const frac = lvl.h / HIGH;                 // 0..1 sobre el máximo histórico
+  water.style.height = (frac*100) + '%';
+  beach.style.height = ((1-frac)*100) + '%'; // banda arena = lo perdido respecto al máximo
+  wval.textContent = lvl.h.toFixed(1);
+}
+renderLevel();
+document.querySelectorAll('.wctrl button').forEach(b=>{
+  b.onclick = ()=> gsap.to(lvl, {h:parseFloat(b.dataset.h), duration:1.1, ease:"power2.inOut", onUpdate:renderLevel});
+});
+
+// --- Galería: reveal escalonado con ScrollTrigger.batch (sin IntersectionObserver) ---
+gsap.set(".gallery figure", {y:16});
+ScrollTrigger.batch(".gallery figure", {
+  start: "top 88%",
+  onEnter: batch => gsap.to(batch, {opacity:1, y:0, duration:.6, stagger:.09, overwrite:true})
+});
+</script>
+</body>
+</html>

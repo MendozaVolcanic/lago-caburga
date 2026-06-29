@@ -24,3 +24,7 @@ docs/footage/wikimedia/*placeholder*
 
 # Sentinel-2 raw GeoTIFFs (recreables)
 data/raw/sentinel2/
+
+# Agent Skills (tooling local, no es parte del sitio)
+.agents/
+skills-lock.json
